@@ -1,0 +1,147 @@
+<html>
+<title> 15-237 Project 1 </title>
+<style>
+#canvas {
+  margin: 0 auto;
+  text-align: center;
+  display: block;
+}
+</style>
+  <canvas id="canvas" width="1000", height="600", style="border:1px solid #000000">
+  </canvas>
+  <script>
+  window.onload = function() {
+    App();
+  }
+  
+  var App = function() {
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    
+    // Load the tilesets
+    var tileset = new Image();
+    tileset.src = "./resources/16tiles.png";
+    tileset.onload = function() {
+      loadmap();
+    };
+    
+    var characters = new Image();
+    characters.src = "./resources/characters.png";
+    characters.onload = function() {
+      drawCharacters();
+    };
+    
+    var tileH = 40;
+    var tileW = 40;
+    var tileSize = 16;
+    
+    // Create a gameboard
+    var grid = [['GG', 'GG', 'GG', 'RP', 'RP', 'GG', 'GG', 'PL', 'PB', 'PC', 'PC', 'PC', 'PR', 'GG', 'PL', 'DN', 'DN', 'PR', 'RP', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'RP', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'RP', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'TG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG', 'LF', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'RP', 'GG', 'GG', 'GG', 'GG', 'SF', 'SF', 'GG', 'LF', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'TG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'RP', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'BG', 'PL', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'BG', 'TG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG'],
+                ['GG', 'TG', 'GG', 'TG', 'GG', 'GG', 'GG', 'BG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+                ['TG', 'TG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
+    console.log(grid);
+    var loadmap = function() {
+      var x = 0;
+      var y = 0;
+      for (i = 0; i < grid[0].length; i++) {
+        for (j = 0; j < grid.length; j++) {
+          switch(grid[j][i]) {
+            case 'GG':
+              x = 1;
+              break;
+            case 'TG':
+              x = 1;
+              y = 2;
+              break;
+            case 'BG':
+              x = 2;
+              y = 2;
+              break;
+            case 'SF':
+              x = 1;
+              y = 1;
+              break;
+            case 'LF':
+              x = 2;
+              y = 1;
+              break;
+            case 'DG':
+              x = 1;
+              y = 6;
+              break;
+            case 'RP':
+              x = 2;
+              break;
+            case 'PA':
+              x = 5;
+              break;
+            case 'PB':
+              x = 6;
+              break;
+            case 'PC':
+              x = 7;
+              break;
+            case 'PL':
+              x = 5;
+              y = 2;
+              break;
+            case 'DN':
+              x = 4;
+              y = 2;
+              break;
+            case 'PR':
+              x = 6;
+              y = 2;
+              break;
+            default:
+              break;
+          }
+          ctx.drawImage(tileset, x*tileSize, y*tileSize, tileSize, tileSize, tileW*i, tileH*j, tileW, tileH);
+          x = 0;
+          y = 0;
+        }
+      }
+      var movementRange = 3;
+      ctx.fillStyle = "rgb(15,150,255)";
+      var drawMovementSquares = function(n, xLoc, yLoc) {
+        if (n === 0) {
+          ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+        } else {
+          ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+          drawMovementSquares(n-1, xLoc - 1, yLoc);
+          drawMovementSquares(n-1, xLoc + 1, yLoc);
+          drawMovementSquares(n-1, xLoc, yLoc + 1);
+          drawMovementSquares(n-1, xLoc, yLoc - 1);
+        }
+      }
+      drawMovementSquares(movementRange, 3, 4);
+      
+    }
+    
+    var drawCharacters = function () {
+      var charH = 36;
+      var charW = 32;
+      ctx.drawImage(characters, charW, charH * 2, charW, charH, 40 * 3 + 3, 40 * 4, charW, charH);
+    }
+    
+    var draw = function() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      loadmap();
+      drawCharacters();
+    }
+    setInterval(draw, 1000 / 10);
+  }
+  </script>  
+</html>
