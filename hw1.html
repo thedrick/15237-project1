@@ -20,8 +20,11 @@
     var ctx = canvas.getContext("2d");
     var cursor;
     var characterSet = [];
+    
     var selectedCharacter = null;
     var actionMenuShowing = false;
+    var characterIsMoving = false;
+    var characterIsAttacking = false;
     var currentActionItem = 0;
     
     // Load the tilesets
@@ -33,9 +36,6 @@
     
     var characters = new Image();
     characters.src = "./resources/characters.png";
-    characters.onload = function() {
-      drawCharacters();
-    };
     
     // tile constants
     var tileH = 40;
@@ -64,7 +64,6 @@
                 ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
                 ['TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
                 ['TG', 'TG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
-    console.log(grid);
     var drawTile = function(i,j) {
       var x = 0;
       var y = 0;
@@ -148,7 +147,44 @@
       ctx.fill();
     }
     
+    var drawMovementSquares = function(n, xLoc, yLoc) {
+      ctx.fillStyle = "rgba(15,150,255, 0.7)";
+      if (n === 0) {
+        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+      } else {
+        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+        drawMovementSquares(n-1, xLoc - 1, yLoc);
+        drawMovementSquares(n-1, xLoc + 1, yLoc);
+        drawMovementSquares(n-1, xLoc, yLoc + 1);
+        drawMovementSquares(n-1, xLoc, yLoc - 1);
+      }
+    }
+    
+    var drawAttackSquares = function(n, xLoc, yLoc) {
+      ctx.fillStyle = "rgba(20,173,0, 0.7)";
+      if (n === 0) {
+        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+      } else {
+        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+        drawAttackSquares(n-1, xLoc - 1, yLoc);
+        drawAttackSquares(n-1, xLoc + 1, yLoc);
+        drawAttackSquares(n-1, xLoc, yLoc + 1);
+        drawAttackSquares(n-1, xLoc, yLoc - 1);
+      }
+    }
+    
     var drawActionMenu = function(c) {
+      if (currentActionItem === 0) {
+        drawMovementSquares(c.movementRange, c.x, c.y);
+      } else if (currentActionItem === 1) {
+        drawAttackSquares(c.attackRange, c.x, c.y);
+      }
+      characterSet.forEach(function(c) {
+        if (currentActionItem == 0) {
+          drawTile(c.x, c.y);
+        }
+        c.draw();
+      });
       ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
       ctx.fillRect(10, canvas.height - 160, 150, 150);
       ctx.font = "24px Croissant One";
@@ -162,6 +198,23 @@
       actionMenuShowing = true;
     }
     
+    var drawStatusBox = function(c) {
+      ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
+      ctx.fillRect(canvas.width - 300, 10, 290, 80);
+      ctx.font = "16px Croissant One";
+      ctx.fillStyle = "black";
+      ctx.fillText("Name:", canvas.width - 260, 30);
+      ctx.fillText("HP:", canvas.width - 245, 55);
+      ctx.fillText("MP:", canvas.width - 245, 80);
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(canvas.width - 215, 45, 180, 10);
+      ctx.strokeRect(canvas.width - 215, 70, 180, 10);
+      ctx.fillStyle = "green";
+      ctx.fillRect(canvas.width - 215, 45, 180 * (c.hp / c.maxHp), 10);
+      ctx.fillStyle = "rgb(28, 95, 212)";
+      ctx.fillRect(canvas.width - 215, 70, 180 * (c.mp / c.maxMp), 10);
+    }
+    
     var loadmap = function() {
       var x = 0;
       var y = 0;
@@ -171,24 +224,6 @@
         }
       }
       var movementRange = 3;
-      ctx.fillStyle = "rgba(15,150,255, 0.7)";
-    }
-    
-    var drawMovementSquares = function(n, xLoc, yLoc) {
-      if (n === 0) {
-        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
-      } else {
-        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
-        drawMovementSquares(n-1, xLoc - 1, yLoc);
-        drawMovementSquares(n-1, xLoc + 1, yLoc);
-        drawMovementSquares(n-1, xLoc, yLoc + 1);
-        drawMovementSquares(n-1, xLoc, yLoc - 1);
-      }
-    }
-    
-    var drawCharacters = function () {
-      
-      ctx.drawImage(characters, charW, charH * 2, charW, charH, 40 * 3 + 3, 40 * 4, charW, charH);
     }
     
     // Character classes
@@ -198,11 +233,15 @@
       this.movementRange = 4;
       this.attackRange = 4;
       this.hp = 50;
+      this.maxHp = 50;
       this.mp = 0;
+      this.maxMp = 1;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 13, charH * 2, charW, charH, tileW * x + charWoffset, tileH * y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 13, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
+      this.isMoving = false;
+      this.isAttacking = false;
     }
     
     var Warrior = function(x, y) {
@@ -211,11 +250,15 @@
       this.movementRange = 3;
       this.attackRange = 1;
       this.hp = 75;
+      this.maxHp = 75;
       this.mp = 0;
+      this.maxMp = 1;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 1, charH * 2, charW, charH, tileW *x + charWoffset, tileH * y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 1, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
+      this.isMoving = false;
+      this.isAttacking = false;
     }
     
     var Mage = function(x, y) {
@@ -224,11 +267,15 @@
       this.movementRange = 3;
       this.attackRange = 1;
       this.hp = 45;
+      this.maxHp = 45;
       this.mp = 40;
+      this.maxMp = 40;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 4, charH * 6, charW, charH, tileW *x + charWoffset, tileH * y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 4, charH * 6, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
+      this.isMoving = false;
+      this.isAttacking = false;
     }
     
     var Ninja = function(x, y) {
@@ -237,11 +284,15 @@
       this.movementRange = 5;
       this.attackRange = 1;
       this.hp = 45;
+      this.maxHp = 45;
       this.mp = 20;
+      this.maxMp = 20;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 10, charH * 2, charW, charH, tileW *x + charWoffset, tileH * y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 10, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
+      this.isMoving = false;
+      this.isAttacking = false;
     }
     
     var Cleric = function(x, y) {
@@ -250,11 +301,15 @@
       this.movementRange = 3;
       this.attackRange = 1;
       this.hp = 45;
+      this.maxHp = 45;
       this.mp = 40;
+      this.maxMp = 40;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 7, charH * 6, charW, charH, tileW *x + charWoffset, tileH * y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 7, charH * 6, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
+      this.isMoving = false;
+      this.isAttacking = false;
     }
     
     characterSet.push(new Archer(2,3));
@@ -293,25 +348,95 @@
       }
     }
     
-    cursor = new Cursor(0,0);
+    cursor = new Cursor(0,0); 
     
-    var keyboardHandler = function(e) {
-      if (actionMenuShowing) {
-        if (e.keyCode === 38 && currentActionItem > 0) {
-          currentActionItem--;
-        } else if (e.keyCode === 40 && currentActionItem < 2) {
-          currentActionItem++;
-        } else if (e.keyCode === 13) {
+    var madeActionSelection = function(c) {
+      switch (currentActionItem) {
+        case 0:
+          c.isMoving = true;
+          characterIsMoving = true;
+          break;
+        case 1:
+          c.isAttacking = true;
+          characterIsAttacking = true;
+          break;
+        case 2:
+          break;
+        default:
+          break;
+      }
+    }
+    
+    var handleActionMenu = function(e) {
+      switch (e.keyCode) {
+        case 38:
+          if (currentActionItem > 0) currentActionItem--;
+          break;
+        case 40:
+          if (currentActionItem < 2) currentActionItem++;
+          break;
+        case 13:
           characterSet.forEach(function (c) {
             if (cursor.x === c.x && cursor.y === c.y) {
-              selectedCharacter = c;
-              c.isSelected = !c.isSelected;
               actionMenuShowing = false;
+              c.isSelected = true;
+              madeActionSelection(c);
             }
           });
-        }
-        return;
+          break;
       }
+    }
+    
+    var alreadyOccupied = function(newX, newY) {
+      isOccupied = false;
+      characterSet.forEach(function(c) {
+        if (c.x === newX && c.y === newY) {
+          isOccupied = true;
+        }
+      });
+      return isOccupied;
+    }
+    
+    var handleCharacterMoving = function(e) {
+      var curX = cursor.x;
+      var curY = cursor.y;
+      switch(e.keyCode) {
+        case 37:
+          cursor.moveLeft();
+          break;
+        case 38:
+          cursor.moveUp();
+          break;
+        case 39:
+          cursor.moveRight();
+          break;
+        case 40:
+          cursor.moveDown();
+          break;
+        case 13:
+          if (!alreadyOccupied(curX, curY)) {
+            selectedCharacter.x = cursor.x;
+            selectedCharacter.y = cursor.y;
+            selectedCharacter.isSelected = false;
+            selectedCharacter = null;
+            actionMenuShowing = false;
+            characterIsMoving = false;
+            characterIsAttacking = false;
+          }
+          break;
+      }
+      var dist = Math.abs(cursor.x - selectedCharacter.x) + Math.abs(cursor.y - selectedCharacter.y);
+      if (dist > selectedCharacter.movementRange) {
+        cursor.x = curX;
+        cursor.y = curY;
+      }
+    };
+    
+    var handleCharacterAttacking = function(e) {
+      
+    };
+    
+    var handleCursorMovement = function(e) {
       switch(e.keyCode) {
         case 37:
           cursor.moveLeft();
@@ -328,10 +453,31 @@
         case 13:
           characterSet.forEach(function (c) {
             if (cursor.x === c.x && cursor.y === c.y) {
+              c.isSelected = true;
+              actionMenuShowing = true;
               selectedCharacter = c;
-              c.isSelected = !c.isSelected;
             }
           });
+      }
+    };
+    
+    var keyboardHandler = function(e) {
+      if (e.keyCode === 27) {
+        if (selectedCharacter !== null) {
+          selectedCharacter.isSelected = false;
+        }
+        selectedCharacter = null;
+        actionMenuShowing = false;
+        characterIsMoving = false;
+        characterIsAttacking = false;
+      } else if (actionMenuShowing) {
+        handleActionMenu(e);
+      } else if (characterIsMoving) {
+        handleCharacterMoving(e);
+      } else if (characterIsAttacking) {
+        handleCharacterAttacking(e);
+      } else {
+        handleCursorMovement(e);
       }
     };
     
@@ -339,27 +485,27 @@
     canvas.setAttribute('tabindex', '0');
     canvas.focus();
     
-    var checkForCharacter = function() {
-      characterSet.forEach(function(c) {
-        if (cursor.x === c.x && cursor.y === c.y) {
-          if (c.isSelected) {
-            drawMovementSquares(c.movementRange, c.x, c.y);
-          }
-        }
-      });
-    }
-    
     var draw = function() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       loadmap();
-      drawCharacters();
-      checkForCharacter();
       characterSet.forEach(function(c) {
-        drawTile(c.x, c.y);
-        c.draw();
         if (c.isSelected) {
-          drawActionMenu(c);
+          if (actionMenuShowing) {
+            drawActionMenu(c);
+          } else if (characterIsMoving) {
+            drawMovementSquares(c.movementRange, c.x, c.y);
+          } else if (characterIsAttacking) {
+            drawAttackSquares(c.attackRange, c.x, c.y);
+          }
+          drawStatusBox(c);
         }
+        c.draw();
+      });
+      characterSet.forEach(function(c) {
+        if (characterIsMoving) {
+          drawTile(c.x, c.y);
+        }
+        c.draw();
       });
       cursor.draw();
     }
