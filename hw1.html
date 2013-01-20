@@ -17,6 +17,7 @@
   var App = function() {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
+    var cursor;
     
     // Load the tilesets
     var tileset = new Image();
@@ -31,9 +32,16 @@
       drawCharacters();
     };
     
+    // tile constants
     var tileH = 40;
     var tileW = 40;
     var tileSize = 16;
+    
+    // characters constants
+    var charH = 36;
+    var charW = 32;
+    var charWoffset = 3;
+    var charHoffset = 2;
     
     // Create a gameboard
     var grid = [['GG', 'GG', 'GG', 'RP', 'RP', 'GG', 'GG', 'PL', 'PB', 'PC', 'PC', 'PC', 'PR', 'GG', 'PL', 'DN', 'DN', 'PR', 'RP', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
@@ -114,7 +122,7 @@
         }
       }
       var movementRange = 3;
-      ctx.fillStyle = "rgb(15,150,255)";
+      ctx.fillStyle = "rgba(15,150,255, 0.7)";
       var drawMovementSquares = function(n, xLoc, yLoc) {
         if (n === 0) {
           ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
@@ -127,21 +135,88 @@
         }
       }
       drawMovementSquares(movementRange, 3, 4);
-      
     }
     
     var drawCharacters = function () {
-      var charH = 36;
-      var charW = 32;
+      
       ctx.drawImage(characters, charW, charH * 2, charW, charH, 40 * 3 + 3, 40 * 4, charW, charH);
     }
+    
+    // Character classes
+    var Archer = function(x, y) {
+      this.x = x;
+      this.y = y;
+      this.movementRange = 4;
+      this.attackRange = 4;
+      this.hp = 50;
+      this.mp = 0;
+    }
+    
+    
+    
+    
+    
+    
+    var Cursor = function(x,y) {
+      this.x = x;
+      this.y = y;
+      this.draw = function() {
+        ctx.strokeStyle = "white"
+        ctx.lineWidth = 2;
+        ctx.strokeRect(tileW * this.x, tileH * this.y, tileW - 2, tileH - 2);
+      }
+      this.moveLeft = function() {
+        if (this.x > 0) {
+          this.x--;
+        }
+      }
+      this.moveRight = function() {
+        if (this.x < grid[0].length - 1) {
+          this.x++;
+        }
+      }
+      this.moveUp = function() {
+        if (this.y > 0) {
+          this.y--;
+        }
+      }
+      this.moveDown = function() {
+        if (this.y < grid.length - 1) {
+          this.y++;
+        }
+      }
+    }
+    
+    cursor = new Cursor(0,0);
+    
+    var keyboardHandler = function(e) {
+      switch(e.keyCode) {
+        case 37:
+          cursor.moveLeft();
+          break;
+        case 38:
+          cursor.moveUp();
+          break;
+        case 39:
+          cursor.moveRight();
+          break;
+        case 40:
+          cursor.moveDown();
+          break;
+      }
+    }
+    canvas.addEventListener('keydown', keyboardHandler, true);
+    canvas.setAttribute('tabindex', '0');
+    canvas.focus();
     
     var draw = function() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       loadmap();
       drawCharacters();
+      cursor.draw();
     }
-    setInterval(draw, 1000 / 10);
+    
+    setInterval(draw, 1000 / 30);
   }
   </script>  
 </html>
