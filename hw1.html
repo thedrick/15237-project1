@@ -1,5 +1,6 @@
 <html>
 <title> 15-237 Project 1 </title>
+<head> <link href='http://fonts.googleapis.com/css?family=Croissant+One' rel='stylesheet' type='text/css'> </head>
 <style>
 #canvas {
   margin: 0 auto;
@@ -19,6 +20,9 @@
     var ctx = canvas.getContext("2d");
     var cursor;
     var characterSet = [];
+    var selectedCharacter = null;
+    var actionMenuShowing = false;
+    var currentActionItem = 0;
     
     // Load the tilesets
     var tileset = new Image();
@@ -117,6 +121,47 @@
       }
       ctx.drawImage(tileset, x*tileSize, y*tileSize, tileSize, tileSize, tileW*i, tileH*j, tileW, tileH);
     }
+    
+    var drawActionMenuArrow = function() {
+      var x = 20;
+      var y = 0;
+      switch (currentActionItem) {
+        case 0:
+          y = canvas.height - 145;
+          break;
+        case 1:
+          y = canvas.height - 95;
+          break;
+        case 2:
+          y = canvas.height - 45;
+          break;
+        default:
+          y = canvas.height - 145;
+          break;
+      }
+      ctx.fillStyle = "black";
+      ctx.beginPath();
+      ctx.moveTo(x , y)
+      ctx.lineTo(x, y + 16);
+      ctx.lineTo(x + 16, y + 8);
+      ctx.closePath();
+      ctx.fill();
+    }
+    
+    var drawActionMenu = function(c) {
+      ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
+      ctx.fillRect(10, canvas.height - 160, 150, 150);
+      ctx.font = "24px Croissant One";
+      ctx.fillStyle = "black";
+      ctx.textAlign = "center"
+      var x = 150 / 2 + 10;
+      ctx.fillText("Move", x, canvas.height - 130);
+      ctx.fillText("Attack", x, canvas.height - 80);
+      ctx.fillText("Wait", x, canvas.height - 30);
+      drawActionMenuArrow();
+      actionMenuShowing = true;
+    }
+    
     var loadmap = function() {
       var x = 0;
       var y = 0;
@@ -251,6 +296,22 @@
     cursor = new Cursor(0,0);
     
     var keyboardHandler = function(e) {
+      if (actionMenuShowing) {
+        if (e.keyCode === 38 && currentActionItem > 0) {
+          currentActionItem--;
+        } else if (e.keyCode === 40 && currentActionItem < 2) {
+          currentActionItem++;
+        } else if (e.keyCode === 13) {
+          characterSet.forEach(function (c) {
+            if (cursor.x === c.x && cursor.y === c.y) {
+              selectedCharacter = c;
+              c.isSelected = !c.isSelected;
+              actionMenuShowing = false;
+            }
+          });
+        }
+        return;
+      }
       switch(e.keyCode) {
         case 37:
           cursor.moveLeft();
@@ -264,8 +325,16 @@
         case 40:
           cursor.moveDown();
           break;
+        case 13:
+          characterSet.forEach(function (c) {
+            if (cursor.x === c.x && cursor.y === c.y) {
+              selectedCharacter = c;
+              c.isSelected = !c.isSelected;
+            }
+          });
       }
     };
+    
     canvas.addEventListener('keydown', keyboardHandler, true);
     canvas.setAttribute('tabindex', '0');
     canvas.focus();
@@ -273,7 +342,9 @@
     var checkForCharacter = function() {
       characterSet.forEach(function(c) {
         if (cursor.x === c.x && cursor.y === c.y) {
-          drawMovementSquares(c.movementRange, c.x, c.y);
+          if (c.isSelected) {
+            drawMovementSquares(c.movementRange, c.x, c.y);
+          }
         }
       });
     }
@@ -285,8 +356,10 @@
       checkForCharacter();
       characterSet.forEach(function(c) {
         drawTile(c.x, c.y);
-        character.isSelected ? c.draw() : ;
         c.draw();
+        if (c.isSelected) {
+          drawActionMenu(c);
+        }
       });
       cursor.draw();
     }
