@@ -26,6 +26,7 @@
     var actionMenuShowing = false;
     var characterIsMoving = false;
     var characterIsAttacking = false;
+    var characterIsWaiting = false;
     var currentActionItem = 0;
     
     // Load the tilesets
@@ -223,12 +224,93 @@
       ctx.fillText("HP:", canvas.width - 265, 55);
       ctx.fillText("MP:", canvas.width - 265, 80);
       ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
       ctx.strokeRect(canvas.width - 215, 45, 180, 10);
       ctx.strokeRect(canvas.width - 215, 70, 180, 10);
       ctx.fillStyle = "green";
       ctx.fillRect(canvas.width - 215, 45, 180 * (c.hp / c.maxHp), 10);
       ctx.fillStyle = "rgb(28, 95, 212)";
       ctx.fillRect(canvas.width - 215, 70, 180 * (c.mp / c.maxMp), 10);
+    }
+    
+    var drawDirectionArrowUp = function(x, y, shouldFill) {
+       // Up arrow
+       ctx.beginPath();
+       ctx.moveTo(tileW * x + 12, tileH * y - 5);
+       ctx.lineTo(tileW * x + 20, tileH * y - 13);
+       ctx.lineTo(tileW * x + 28, tileH * y - 5);
+       ctx.closePath();
+       if (shouldFill) {
+         ctx.fill();
+       } else {
+         ctx.stroke();
+       }
+    }
+    
+    var drawDirectionArrowLeft = function(x, y, shouldFill) {
+      ctx.beginPath();
+      ctx.moveTo(tileW * x - 5, tileH * y + 12);
+      ctx.lineTo(tileW * x - 13, tileH * y + 20);
+      ctx.lineTo(tileW * x - 5, tileH * y + 28);
+      ctx.closePath();
+      if (shouldFill) {
+        ctx.fill();
+      } else {
+        ctx.stroke(); 
+      }
+    }
+    
+    var drawDirectionArrowRight = function(x, y, shouldFill) {
+      ctx.beginPath();
+      ctx.moveTo(tileW * (x + 1) + 5, tileH * y + 12);
+      ctx.lineTo(tileW * (x + 1) + 13, tileH * y + 20);
+      ctx.lineTo(tileW * (x + 1) + 5, tileH * y + 28);
+      ctx.closePath();
+      if (shouldFill) {
+        ctx.fill();
+      } else {
+        ctx.stroke();
+      }
+    }
+    
+    var drawDirectionArrowDown = function(x, y, shouldFill) {
+      ctx.beginPath();
+      ctx.moveTo(tileW * x + 12, tileH * (y + 1) + 5);
+      ctx.lineTo(tileW * x + 20, tileH * (y + 1) + 13);
+      ctx.lineTo(tileW * x + 28, tileH * (y + 1) + 5);
+      ctx.closePath();
+      if (shouldFill) {
+        ctx.fill();
+      } else {
+        ctx.stroke();
+      }
+    }
+    
+    var drawWaitingArrows = function(c) {
+      // Up arrow
+      ctx.strokeStyle = "rgb(245, 196, 0)";
+      ctx.lineWidth = 2;
+      drawDirectionArrowUp(c.x, c.y, false);
+      drawDirectionArrowLeft(c.x, c.y, false);
+      drawDirectionArrowRight(c.x, c.y, false);
+      drawDirectionArrowDown(c.x, c.y, false);
+      ctx.fillStyle = "rgb(245, 196, 0)";
+      switch (c.direction) {
+        case 0:
+          drawDirectionArrowUp(c.x, c.y, true);
+          break;
+        case 1:
+          drawDirectionArrowRight(c.x, c.y, true);
+          break;
+        case 2:
+          drawDirectionArrowDown(c.x, c.y, true);
+          break;
+        case 3:
+          drawDirectionArrowLeft(c.x, c.y, true);
+          break;
+        default:
+          break;
+      }
     }
     
     // loads the gamemap by looping through the grid and drawing each tile.
@@ -254,8 +336,9 @@
       this.mp = 0;
       this.maxMp = 1;
       this.name = "Archer";
+      this.direction = 2;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 13, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 13, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
       this.isMoving = false;
@@ -273,8 +356,9 @@
       this.mp = 0;
       this.maxMp = 1;
       this.name = "Warrior";
+      this.direction = 2;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 1, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 1, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
       this.isMoving = false;
@@ -292,8 +376,9 @@
       this.mp = 40;
       this.maxMp = 40;
       this.name = "Mage";
+      this.direction = 2;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 4, charH * 6, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 4, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
       this.isMoving = false;
@@ -311,8 +396,9 @@
       this.mp = 20;
       this.maxMp = 20;
       this.name = "Ninja";
+      this.direction = 2;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 10, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 10, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
       this.isMoving = false;
@@ -330,8 +416,9 @@
       this.mp = 40;
       this.maxMp = 40;
       this.name = "Cleric";
+      this.direction = 2;
       this.draw = function() {
-        ctx.drawImage(characters, charW * 7, charH * 6, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        ctx.drawImage(characters, charW * 7, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
       this.isSelected = false;
       this.isMoving = false;
@@ -392,6 +479,7 @@
           characterIsAttacking = true;
           break;
         case 2:
+          characterIsWaiting = true;
           break;
         default:
           break;
@@ -442,6 +530,31 @@
       return charAtLoc;
     }
     
+    var handleCharacterWaiting = function(e) {
+      switch(e.keyCode) {
+        case 37:
+          selectedCharacter.direction = 3;
+          break;
+        case 38:
+          selectedCharacter.direction = 0;
+          break;
+        case 39:
+          selectedCharacter.direction = 1;
+          break;
+        case 40:
+          selectedCharacter.direction = 2;
+          break;
+        case 13:
+          selectedCharacter.isSelected = false;
+          selectedCharacter = null;
+          actionMenuShowing = false;
+          characterIsMoving = false;
+          characterIsAttacking = false;
+          characterIsWaiting = false;
+          break;
+      }
+    }
+    
     // The characterIsMoving game state is active, so lets handle movement.
     var handleCharacterMoving = function(e) {
       var curX = cursor.x;
@@ -468,6 +581,7 @@
             actionMenuShowing = false;
             characterIsMoving = false;
             characterIsAttacking = false;
+            characterIsWaiting = false;
             return;
           }
           break;
@@ -509,6 +623,7 @@
             actionMenuShowing = false;
             characterIsMoving = false;
             characterIsAttacking = false;
+            characterIsWaiting = false;
             return;
           }
           break;
@@ -560,12 +675,15 @@
         actionMenuShowing = false;
         characterIsMoving = false;
         characterIsAttacking = false;
+        characterIsWaiting = false;
       } else if (actionMenuShowing) {
         handleActionMenu(e);
       } else if (characterIsMoving) {
         handleCharacterMoving(e);
       } else if (characterIsAttacking) {
         handleCharacterAttacking(e);
+      } else if (characterIsWaiting) {
+        handleCharacterWaiting(e);
       } else {
         handleCursorMovement(e);
       }
@@ -598,9 +716,13 @@
         }
         c.draw();
       });
+      if (characterIsWaiting) {
+        drawWaitingArrows(selectedCharacter);
+      }
       cursor.draw();
     }
     
+    // draw at 30 FPS
     setInterval(draw, 1000 / 30);
   }
   </script>  
