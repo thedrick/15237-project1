@@ -337,6 +337,22 @@
       }
     }
     
+    var circle = function(cx, cy, radius) {
+        ctx.arc(cx, cy, radius, 0, 2*Math.PI, true);
+    }
+    
+    var drawCharacterSide = function(x, y) {
+      ctx.fillStyle = "green";
+      ctx.beginPath();
+      circle(tileW * (x + 1) - 6,tileH * y + 4, 3);
+      ctx.fill();
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      circle(tileW * (x + 1) - 6,tileH * y + 4, 3);
+      ctx.stroke();
+    }
+    
     // Character classes //
     // Represents an Archer unit in the game.
     var Archer = function(x, y) {
@@ -350,12 +366,16 @@
       this.maxMp = 1;
       this.name = "Archer";
       this.direction = 2;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 13, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-      }
       this.isSelected = false;
       this.isMoving = false;
       this.isAttacking = false;
+      this.hasMoved = false;
+      this.hasAttacked = false;
+      this.draw = function() {
+        ctx.drawImage(characters, charW * 13, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        if (!(this.hasMoved && this.hasAttacked))
+          drawCharacterSide(this.x, this.y);
+      }
     }
     
     // Represents a Warrior unit in the game.
@@ -370,12 +390,16 @@
       this.maxMp = 1;
       this.name = "Warrior";
       this.direction = 2;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 1, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-      }
       this.isSelected = false;
       this.isMoving = false;
       this.isAttacking = false;
+      this.hasMoved = false;
+      this.hasAttacked = false;
+      this.draw = function() {
+        ctx.drawImage(characters, charW * 1, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        if (!(this.hasMoved && this.hasAttacked))
+          drawCharacterSide(this.x, this.y);
+      }
     }
     
     // Represents a Mage unit in the game.
@@ -390,12 +414,16 @@
       this.maxMp = 40;
       this.name = "Mage";
       this.direction = 2;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 4, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-      }
       this.isSelected = false;
       this.isMoving = false;
       this.isAttacking = false;
+      this.hasMoved = false;
+      this.hasAttacked = false;
+      this.draw = function() {
+        ctx.drawImage(characters, charW * 4, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        if (!(this.hasMoved && this.hasAttacked))
+          drawCharacterSide(this.x, this.y);
+      }
     }
     
     // Represents a Mage unit in the game.
@@ -410,12 +438,16 @@
       this.maxMp = 20;
       this.name = "Ninja";
       this.direction = 2;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 10, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-      }
       this.isSelected = false;
       this.isMoving = false;
       this.isAttacking = false;
+      this.hasMoved = false;
+      this.hasAttacked = false;
+      this.draw = function() {
+        ctx.drawImage(characters, charW * 10, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        if (!(this.hasMoved && this.hasAttacked))
+          drawCharacterSide(this.x, this.y);
+      }
     }
     
     // Represents a Cleric unit in the game.
@@ -430,13 +462,18 @@
       this.maxMp = 40;
       this.name = "Cleric";
       this.direction = 2;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 7, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-      }
       this.isSelected = false;
       this.isMoving = false;
       this.isAttacking = false;
+      this.hasMoved = false;
+      this.hasAttacked = false;
+      this.draw = function() {
+        ctx.drawImage(characters, charW * 7, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+        if (!(this.hasMoved && this.hasAttacked))
+          drawCharacterSide(this.x, this.y);
+      }
     }
+    
     
     // populate the board with some starting units.
     characterSet.push(new Archer(2,3));
@@ -558,6 +595,8 @@
           selectedCharacter.direction = 2;
           break;
         case 13:
+          selectedCharacter.hasAttacked = true;
+          selectedCharacter.hasMoved = true;
           resetGameState();
           break;
       }
@@ -584,6 +623,7 @@
           if (!alreadyOccupied(curX, curY)) {
             selectedCharacter.x = cursor.x;
             selectedCharacter.y = cursor.y;
+            selectedCharacter.hasMoved = true;
             resetGameState();
             return;
           }
@@ -621,6 +661,7 @@
           if (alreadyOccupied(curX, curY)) {
             var attackedPlayer = characterAtLocation(curX, curY);
             console.log(selectedCharacter.name + " attacked " + attackedPlayer.name);
+            selectedCharacter.hasAttacked = true;
             resetGameState();
             return;
           }
@@ -652,6 +693,10 @@
         case 13:
           characterSet.forEach(function (c) {
             if (cursor.x === c.x && cursor.y === c.y) {
+              if (c.hasMoved && c.hasAttacked){
+                console.log(c.name + " cannot act again this turn.");
+                return;
+              }
               c.isSelected = true;
               actionMenuShowing = true;
               selectedCharacter = c;
