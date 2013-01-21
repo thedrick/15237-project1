@@ -29,6 +29,19 @@
     var characterIsWaiting = false;
     var currentActionItem = 0;
     
+    // resets game states back to default values.
+    var resetGameState = function() {
+      if (selectedCharacter !== null) {
+        selectedCharacter.isSelected = false;
+        selectedCharacter = null;
+      }
+      actionMenuShowing = false;
+      characterIsMoving = false;
+      characterIsAttacking = false;
+      characterIsWaiting = false;
+      currentActionItem = 0;
+    }
+    
     // Load the tilesets
     var tileset = new Image();
     tileset.src = "./resources/16tiles.png";
@@ -545,12 +558,7 @@
           selectedCharacter.direction = 2;
           break;
         case 13:
-          selectedCharacter.isSelected = false;
-          selectedCharacter = null;
-          actionMenuShowing = false;
-          characterIsMoving = false;
-          characterIsAttacking = false;
-          characterIsWaiting = false;
+          resetGameState();
           break;
       }
     }
@@ -576,12 +584,7 @@
           if (!alreadyOccupied(curX, curY)) {
             selectedCharacter.x = cursor.x;
             selectedCharacter.y = cursor.y;
-            selectedCharacter.isSelected = false;
-            selectedCharacter = null;
-            actionMenuShowing = false;
-            characterIsMoving = false;
-            characterIsAttacking = false;
-            characterIsWaiting = false;
+            resetGameState();
             return;
           }
           break;
@@ -618,12 +621,7 @@
           if (alreadyOccupied(curX, curY)) {
             var attackedPlayer = characterAtLocation(curX, curY);
             console.log(selectedCharacter.name + " attacked " + attackedPlayer.name);
-            selectedCharacter.isSelected = false;
-            selectedCharacter = null;
-            actionMenuShowing = false;
-            characterIsMoving = false;
-            characterIsAttacking = false;
-            characterIsWaiting = false;
+            resetGameState();
             return;
           }
           break;
@@ -667,15 +665,8 @@
     // note that game states exist in a hierarchy to make sure players
     // are limited to certain actions based on the current state.
     var keyboardHandler = function(e) {
-      if (e.keyCode === 27) {
-        if (selectedCharacter !== null) {
-          selectedCharacter.isSelected = false;
-        }
-        selectedCharacter = null;
-        actionMenuShowing = false;
-        characterIsMoving = false;
-        characterIsAttacking = false;
-        characterIsWaiting = false;
+      if (e.keyCode === 27) { // ESC key
+        resetGameState();
       } else if (actionMenuShowing) {
         handleActionMenu(e);
       } else if (characterIsMoving) {
@@ -718,8 +709,9 @@
       });
       if (characterIsWaiting) {
         drawWaitingArrows(selectedCharacter);
+      } else {
+        cursor.draw();
       }
-      cursor.draw();
     }
     
     // draw at 30 FPS
