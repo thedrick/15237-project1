@@ -21,6 +21,7 @@
     var cursor;
     var characterSet = [];
     
+    // Global states that represent the current actions allowed or unallowed
     var selectedCharacter = null;
     var actionMenuShowing = false;
     var characterIsMoving = false;
@@ -64,54 +65,55 @@
                 ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
                 ['TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
                 ['TG', 'TG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
+    // draw the tile at i,j from the gameboard grid.
     var drawTile = function(i,j) {
       var x = 0;
       var y = 0;
       switch(grid[j][i]) {
-        case 'GG':
+        case 'GG': // Green grass
           x = 1;
           break;
-        case 'TG':
+        case 'TG': // tall grass
           x = 1;
           y = 2;
           break;
-        case 'BG':
+        case 'BG': // bush in grass
           x = 2;
           y = 2;
           break;
-        case 'SF':
+        case 'SF': // small flowers
           x = 1;
           y = 1;
           break;
-        case 'LF':
+        case 'LF': // large flowers
           x = 2;
           y = 1;
           break;
-        case 'DG':
+        case 'DG': // dark grass
           x = 1;
           y = 6;
           break;
-        case 'RP':
+        case 'RP': // rock pile
           x = 2;
           break;
-        case 'PA':
+        case 'PA': // dirt path part A 
           x = 5;
           break;
-        case 'PB':
+        case 'PB': // dirt path part B
           x = 6;
           break;
-        case 'PC':
+        case 'PC': // dirt path part C
           x = 7;
           break;
-        case 'PL':
+        case 'PL': // dirt path left side
           x = 5;
           y = 2;
           break;
-        case 'DN':
+        case 'DN': // dirt normal
           x = 4;
           y = 2;
           break;
-        case 'PR':
+        case 'PR': // dirt path right side
           x = 6;
           y = 2;
           break;
@@ -121,17 +123,18 @@
       ctx.drawImage(tileset, x*tileSize, y*tileSize, tileSize, tileSize, tileW*i, tileH*j, tileW, tileH);
     }
     
+    // Creates an arrow in the action menu.
     var drawActionMenuArrow = function() {
       var x = 20;
       var y = 0;
       switch (currentActionItem) {
-        case 0:
+        case 0: // Move
           y = canvas.height - 145;
           break;
-        case 1:
+        case 1: // Attack
           y = canvas.height - 95;
           break;
-        case 2:
+        case 2: // Wait
           y = canvas.height - 45;
           break;
         default:
@@ -147,6 +150,7 @@
       ctx.fill();
     }
     
+    // Overlay a blue square on tiles where the selected player is allowed to move.
     var drawMovementSquares = function(n, xLoc, yLoc) {
       ctx.fillStyle = "rgba(15,150,255, 0.7)";
       if (n === 0) {
@@ -160,6 +164,7 @@
       }
     }
     
+    // Overlay a green square on tiles where the selected player is allowed to attack.
     var drawAttackSquares = function(n, xLoc, yLoc) {
       ctx.fillStyle = "rgba(20,173,0, 0.7)";
       if (n === 0) {
@@ -173,6 +178,9 @@
       }
     }
     
+    // Draws the action menu and sets actionMenuShowing state to true. When this state is
+    // true the player can only move the arrow in the menu and must make a selection or hit
+    // ESC to exit the action menu.
     var drawActionMenu = function(c) {
       if (currentActionItem === 0) {
         drawMovementSquares(c.movementRange, c.x, c.y);
@@ -198,6 +206,8 @@
       actionMenuShowing = true;
     }
     
+    // Draws the selected player's status in the right hand corner of the screen
+    // This displays the character's name, hp, and mp.
     var drawStatusBox = function(c) {
       ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
       ctx.fillRect(canvas.width - 300, 10, 290, 80);
@@ -221,6 +231,7 @@
       ctx.fillRect(canvas.width - 215, 70, 180 * (c.mp / c.maxMp), 10);
     }
     
+    // loads the gamemap by looping through the grid and drawing each tile.
     var loadmap = function() {
       var x = 0;
       var y = 0;
@@ -229,10 +240,10 @@
           drawTile(i,j);
         }
       }
-      var movementRange = 3;
     }
     
-    // Character classes
+    // Character classes //
+    // Represents an Archer unit in the game.
     var Archer = function(x, y) {
       this.x = x;
       this.y = y;
@@ -251,6 +262,7 @@
       this.isAttacking = false;
     }
     
+    // Represents a Warrior unit in the game.
     var Warrior = function(x, y) {
       this.x = x;
       this.y = y;
@@ -269,6 +281,7 @@
       this.isAttacking = false;
     }
     
+    // Represents a Mage unit in the game.
     var Mage = function(x, y) {
       this.x = x;
       this.y = y;
@@ -287,6 +300,7 @@
       this.isAttacking = false;
     }
     
+    // Represents a Mage unit in the game.
     var Ninja = function(x, y) {
       this.x = x;
       this.y = y;
@@ -305,6 +319,7 @@
       this.isAttacking = false;
     }
     
+    // Represents a Cleric unit in the game.
     var Cleric = function(x, y) {
       this.x = x;
       this.y = y;
@@ -323,12 +338,15 @@
       this.isAttacking = false;
     }
     
+    // populate the board with some starting units.
     characterSet.push(new Archer(2,3));
     characterSet.push(new Cleric(2,2));
     characterSet.push(new Ninja(3,2));
     characterSet.push(new Mage(1,4));
     characterSet.push(new Warrior(3,4));
     
+    // white outline around squares which represents the player's cursor. This allows the player
+    // to make selections, pick tiles to move to, pick tiles to attack, etc.
     var Cursor = function(x,y) {
       this.x = x;
       this.y = y;
@@ -359,8 +377,10 @@
       }
     }
     
+    // initialize the cursor at the top left of the game board.
     cursor = new Cursor(0,0); 
     
+    // The player selected something in the action menu, so let's handle that.
     var madeActionSelection = function(c) {
       switch (currentActionItem) {
         case 0:
@@ -378,6 +398,8 @@
       }
     }
     
+    // The action menu is currently being displayed, so handle any 
+    // subsequent events.
     var handleActionMenu = function(e) {
       switch (e.keyCode) {
         case 38:
@@ -398,6 +420,7 @@
       }
     }
     
+    // check if the tile at newX, newY is occupied by another character.
     var alreadyOccupied = function(newX, newY) {
       isOccupied = false;
       characterSet.forEach(function(c) {
@@ -408,6 +431,7 @@
       return isOccupied;
     }
     
+    // find the character at location (xLoc, yLoc)
     var characterAtLocation = function(xLoc, yLoc) {
       var charAtLoc = null;
       characterSet.forEach(function(c) {
@@ -418,6 +442,7 @@
       return charAtLoc;
     }
     
+    // The characterIsMoving game state is active, so lets handle movement.
     var handleCharacterMoving = function(e) {
       var curX = cursor.x;
       var curY = cursor.y;
@@ -454,6 +479,7 @@
       }
     };
     
+    // the characterIsAttacking game state is active, so let's handle attacking.
     var handleCharacterAttacking = function(e) {
       var curX = cursor.x;
       var curY = cursor.y;
@@ -494,6 +520,8 @@
       }
     };
     
+    // Allows the cursor to move around the game board. This is only called when we are not
+    // moving, attacking, or selecting an action item.
     var handleCursorMovement = function(e) {
       switch(e.keyCode) {
         case 37:
@@ -519,6 +547,10 @@
       }
     };
     
+    // Keyboard event handler that dispatches the event to the proper
+    // function which will handle it based on the current game state.
+    // note that game states exist in a hierarchy to make sure players
+    // are limited to certain actions based on the current state.
     var keyboardHandler = function(e) {
       if (e.keyCode === 27) {
         if (selectedCharacter !== null) {
@@ -543,6 +575,7 @@
     canvas.setAttribute('tabindex', '0');
     canvas.focus();
     
+    // The draw function to continually update the canvas with data.
     var draw = function() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       loadmap();
