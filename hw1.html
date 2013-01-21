@@ -186,7 +186,7 @@
         c.draw();
       });
       ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
-      ctx.fillRect(10, canvas.height - 160, 150, 150);
+      ctx.fillRect(10, canvas.height - 160, 135, 150);
       ctx.font = "24px Croissant One";
       ctx.fillStyle = "black";
       ctx.textAlign = "center"
@@ -202,10 +202,16 @@
       ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
       ctx.fillRect(canvas.width - 300, 10, 290, 80);
       ctx.font = "16px Croissant One";
-      ctx.fillStyle = "black";
-      ctx.fillText("Name:", canvas.width - 260, 30);
-      ctx.fillText("HP:", canvas.width - 245, 55);
-      ctx.fillText("MP:", canvas.width - 245, 80);
+      ctx.fillStyle = "rgba(0,0,0,.7)";
+      ctx.textAlign = "left";
+      // Drop shadow
+      ctx.fillText("Name:    " + c.name, canvas.width - 292, 31);
+      ctx.fillText("HP:", canvas.width - 267, 56);
+      ctx.fillText("MP:", canvas.width - 267, 81);
+      ctx.fillStyle = "white";
+      ctx.fillText("Name:    " + c.name, canvas.width - 290, 30);
+      ctx.fillText("HP:", canvas.width - 265, 55);
+      ctx.fillText("MP:", canvas.width - 265, 80);
       ctx.strokeStyle = "black";
       ctx.strokeRect(canvas.width - 215, 45, 180, 10);
       ctx.strokeRect(canvas.width - 215, 70, 180, 10);
@@ -236,6 +242,7 @@
       this.maxHp = 50;
       this.mp = 0;
       this.maxMp = 1;
+      this.name = "Archer";
       this.draw = function() {
         ctx.drawImage(characters, charW * 13, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
@@ -253,6 +260,7 @@
       this.maxHp = 75;
       this.mp = 0;
       this.maxMp = 1;
+      this.name = "Warrior";
       this.draw = function() {
         ctx.drawImage(characters, charW * 1, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
@@ -270,6 +278,7 @@
       this.maxHp = 45;
       this.mp = 40;
       this.maxMp = 40;
+      this.name = "Mage";
       this.draw = function() {
         ctx.drawImage(characters, charW * 4, charH * 6, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
@@ -287,6 +296,7 @@
       this.maxHp = 45;
       this.mp = 20;
       this.maxMp = 20;
+      this.name = "Ninja";
       this.draw = function() {
         ctx.drawImage(characters, charW * 10, charH * 2, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
@@ -304,6 +314,7 @@
       this.maxHp = 45;
       this.mp = 40;
       this.maxMp = 40;
+      this.name = "Cleric";
       this.draw = function() {
         ctx.drawImage(characters, charW * 7, charH * 6, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
       }
@@ -397,6 +408,16 @@
       return isOccupied;
     }
     
+    var characterAtLocation = function(xLoc, yLoc) {
+      var charAtLoc = null;
+      characterSet.forEach(function(c) {
+        if (c.x === xLoc && c.y === yLoc) {
+          charAtLoc = c;
+        }
+      });
+      return charAtLoc;
+    }
+    
     var handleCharacterMoving = function(e) {
       var curX = cursor.x;
       var curY = cursor.y;
@@ -422,6 +443,7 @@
             actionMenuShowing = false;
             characterIsMoving = false;
             characterIsAttacking = false;
+            return;
           }
           break;
       }
@@ -433,7 +455,43 @@
     };
     
     var handleCharacterAttacking = function(e) {
-      
+      var curX = cursor.x;
+      var curY = cursor.y;
+      switch(e.keyCode) {
+        case 37:
+          cursor.moveLeft();
+          break;
+        case 38:
+          cursor.moveUp();
+          break;
+        case 39:
+          cursor.moveRight();
+          break;
+        case 40:
+          cursor.moveDown();
+          break;
+        case 13:
+          // cannot attack yourself
+          if (curX === selectedCharacter.x && curY === selectedCharacter.y) 
+            return;
+          // there is someone there we can attack!
+          if (alreadyOccupied(curX, curY)) {
+            var attackedPlayer = characterAtLocation(curX, curY);
+            console.log(selectedCharacter.name + " attacked " + attackedPlayer.name);
+            selectedCharacter.isSelected = false;
+            selectedCharacter = null;
+            actionMenuShowing = false;
+            characterIsMoving = false;
+            characterIsAttacking = false;
+            return;
+          }
+          break;
+      }
+      var dist = Math.abs(cursor.x - selectedCharacter.x) + Math.abs(cursor.y - selectedCharacter.y);
+      if (dist > selectedCharacter.attackRange) {
+        cursor.x = curX;
+        cursor.y = curY;
+      }
     };
     
     var handleCursorMovement = function(e) {
