@@ -28,6 +28,7 @@
     var characterIsAttacking = false;
     var characterIsWaiting = false;
     var currentActionItem = 0;
+    var neighbors = new Array();
     
     // resets game states back to default values.
     var resetGameState = function() {
@@ -40,6 +41,7 @@
       characterIsAttacking = false;
       characterIsWaiting = false;
       currentActionItem = 0;
+      neighbors = [];
     }
     
     // Load the tilesets
@@ -164,20 +166,44 @@
       ctx.fill();
     }
     
+     //var neighbors = new Array();  
+
+     var contains = function(x,y) {
+        for (var i = 0; i < neighbors.length; i++) {
+          var x1 = neighbors[i][0];
+          var y1 = neighbors[i][1]
+          if (x1 == x && y1 == y ) {
+            return true;
+        }
+      }
+
+        return false;
+        
+      }
+
     // Overlay a blue square on tiles where the selected player is allowed to move.
     var drawMovementSquares = function(n, xLoc, yLoc) {
       ctx.fillStyle = "rgba(15,150,255, 0.7)";
       if (n === 0) {
-        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+        //ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+        return;
       } else {
-        ctx.fillRect(tileW * xLoc, tileH * yLoc, 37, 37);
+        
+        if(!contains(xLoc, yLoc))
+          {
+            var coord = new Array(2);
+            coord[0] = xLoc;
+            coord[1] = yLoc;
+            neighbors.push(coord);
+          }
+
         drawMovementSquares(n-1, xLoc - 1, yLoc);
         drawMovementSquares(n-1, xLoc + 1, yLoc);
         drawMovementSquares(n-1, xLoc, yLoc + 1);
         drawMovementSquares(n-1, xLoc, yLoc - 1);
       }
     }
-    
+
     // Overlay a green square on tiles where the selected player is allowed to attack.
     var drawAttackSquares = function(n, xLoc, yLoc) {
       ctx.fillStyle = "rgba(20,173,0, 0.7)";
@@ -198,6 +224,11 @@
     var drawActionMenu = function(c) {
       if (currentActionItem === 0) {
         drawMovementSquares(c.movementRange, c.x, c.y);
+        for(var k=0; k<neighbors.length; k++){
+            var xcord = neighbors[k][0];
+            var ycord = neighbors[k][1];
+            ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+        }
       } else if (currentActionItem === 1) {
         drawAttackSquares(c.attackRange, c.x, c.y);
       }
@@ -694,6 +725,11 @@
             drawActionMenu(c);
           } else if (characterIsMoving) {
             drawMovementSquares(c.movementRange, c.x, c.y);
+            for(var k=0; k<neighbors.length; k++){
+            var xcord = neighbors[k][0];
+            var ycord = neighbors[k][1];
+            ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+          }
           } else if (characterIsAttacking) {
             drawAttackSquares(c.attackRange, c.x, c.y);
           }
