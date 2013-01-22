@@ -8,31 +8,126 @@
   display: block;
 }
 </style>
-  <canvas id="canvas" width="1000", height="600", style="border:1px solid #000000">
-  </canvas>
+  <canvas id="canvas" width="1000", height="600", style="border:1px solid #000000"></canvas>
+  <script>
+  // CONSTANTS 
+  var canvas;
+  var ctx;
+  var cursor;
+  var characterSet;
+
+  // tile constants
+  var tileH;
+  var tileW;
+  var tileSize;
+
+  // characters constants
+  var charH;
+  var charW;
+  var charWoffset;
+  var charHoffset;
+
+  // Global states that represent the current actions allowed or unallowed
+  var selectedCharacter;
+  var actionMenuShowing;
+  var characterIsMoving;
+  var characterIsAttacking;
+  var characterIsWaiting;
+  var currentActionItem;
+  var neighbors;
+  var attack;
+
+  // Load the tilesets
+  var tileset;
+  var characters;
+  
+  // gameboard
+  var grid;
+  // drawing code located in gameDrawing.js
+  var drawTile;
+  var drawActionMenuArrow;
+  var containsmovement;
+  var drawMovementSquares;
+  var containsattack;
+  var drawAttackSquares;
+  var drawActionMenu;
+  var drawStatusBox;
+  var drawDirectionArrowUp;
+  var drawDirectionArrowLeft;
+  var drawDirectionArrowRight;
+  var drawDirectionArrowDown;
+  var drawWaitingArrows;
+  var loadmap;
+  var circle;
+  var drawCharacterSide;
+  
+  // units code located in units.js
+  var Archer;
+  var Warrior;
+  var Mage;
+  var Ninja;
+  var Cleric;
+  
+  // Event handlers - located in eventHandlers.js
+  var madeActionSelection;
+  var handleActionMenu;
+  var alreadyOccupied;
+  var characterAtLocation;
+  var handleCharacterWaiting;
+  var handleCharacterMoving;
+  var handleCharacterAttacking;
+  var handleCursorMovement
+  var keyboardHandler
+  
+  // Defined below
+  var App
+  var resetGameStates;
+  var draw;
+  </script>
+  
+  <script src="gameDrawing.js" ></script>
+  <script src="units.js"></script>
+  <script src="eventHandlers.js"></script>
   <script>
   window.onload = function() {
     App();
   }
   
-  var App = function() {
-    var canvas = document.getElementById("canvas");
-    var ctx = canvas.getContext("2d");
-    var cursor;
-    var characterSet = [];
-    
+  App = function() {
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+    characterSet = [];
+    // tile constants
+    tileH = 40;
+    tileW = 40;
+    tileSize = 16;
+
+    // characters constants
+    charH = 36;
+    charW = 32;
+    charWoffset = 3;
+    charHoffset = 2;
+
     // Global states that represent the current actions allowed or unallowed
-    var selectedCharacter = null;
-    var actionMenuShowing = false;
-    var characterIsMoving = false;
-    var characterIsAttacking = false;
-    var characterIsWaiting = false;
-    var currentActionItem = 0;
-    var neighbors = new Array();
-    var attack = new Array();
+    selectedCharacter = null;
+    actionMenuShowing = false;
+    characterIsMoving = false;
+    characterIsAttacking = false;
+    characterIsWaiting = false;
+    currentActionItem = 0;
+    neighbors = new Array();
+    attack = new Array();
+    
+    tileset = new Image();
+    tileset.src = "./resources/16tiles.png";
+    tileset.onload = function() {
+        loadmap(ctx);
+    };
+    characters = new Image();
+    characters.src = "./resources/characters.png";
     
     // resets game states back to default values.
-    var resetGameState = function() {
+    resetGameState = function() {
       if (selectedCharacter !== null) {
         selectedCharacter.isSelected = false;
         selectedCharacter = null;
@@ -46,505 +141,12 @@
       attack = [];
     }
     
-    // Load the tilesets
-    var tileset = new Image();
-    tileset.src = "./resources/16tiles.png";
-    tileset.onload = function() {
-      loadmap();
-    };
-    
-    var characters = new Image();
-    characters.src = "./resources/characters.png";
-    
-    // tile constants
-    var tileH = 40;
-    var tileW = 40;
-    var tileSize = 16;
-    
-    // characters constants
-    var charH = 36;
-    var charW = 32;
-    var charWoffset = 3;
-    var charHoffset = 2;
-    
-    // Create a gameboard
-    var grid = [['GG', 'GG', 'GG', 'RP', 'RP', 'GG', 'GG', 'PL', 'PB', 'PC', 'PC', 'PC', 'PR', 'GG', 'PL', 'DN', 'DN', 'PR', 'RP', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'RP', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'RP', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'TG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG', 'LF', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'RP', 'GG', 'GG', 'GG', 'GG', 'SF', 'SF', 'GG', 'LF', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'TG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'RP', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'BG', 'PL', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'BG', 'TG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG'],
-                ['GG', 'TG', 'GG', 'TG', 'GG', 'GG', 'GG', 'BG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-                ['TG', 'TG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
-    // draw the tile at i,j from the gameboard grid.
-    var drawTile = function(i,j) {
-      var x = 0;
-      var y = 0;
-      switch(grid[j][i]) {
-        case 'GG': // Green grass
-          x = 1;
-          break;
-        case 'TG': // tall grass
-          x = 1;
-          y = 2;
-          break;
-        case 'BG': // bush in grass
-          x = 2;
-          y = 2;
-          break;
-        case 'SF': // small flowers
-          x = 1;
-          y = 1;
-          break;
-        case 'LF': // large flowers
-          x = 2;
-          y = 1;
-          break;
-        case 'DG': // dark grass
-          x = 1;
-          y = 6;
-          break;
-        case 'RP': // rock pile
-          x = 2;
-          break;
-        case 'PA': // dirt path part A 
-          x = 5;
-          break;
-        case 'PB': // dirt path part B
-          x = 6;
-          break;
-        case 'PC': // dirt path part C
-          x = 7;
-          break;
-        case 'PL': // dirt path left side
-          x = 5;
-          y = 2;
-          break;
-        case 'DN': // dirt normal
-          x = 4;
-          y = 2;
-          break;
-        case 'PR': // dirt path right side
-          x = 6;
-          y = 2;
-          break;
-        default:
-          break;
-      }
-      ctx.drawImage(tileset, x*tileSize, y*tileSize, tileSize, tileSize, tileW*i, tileH*j, tileW, tileH);
-    }
-    
-    // Creates an arrow in the action menu.
-    var drawActionMenuArrow = function() {
-      var x = 20;
-      var y = 0;
-      switch (currentActionItem) {
-        case 0: // Move
-          y = canvas.height - 145;
-          break;
-        case 1: // Attack
-          y = canvas.height - 95;
-          break;
-        case 2: // Wait
-          y = canvas.height - 45;
-          break;
-        default:
-          y = canvas.height - 145;
-          break;
-      }
-      ctx.fillStyle = "black";
-      ctx.beginPath();
-      ctx.moveTo(x , y)
-      ctx.lineTo(x, y + 16);
-      ctx.lineTo(x + 16, y + 8);
-      ctx.closePath();
-      ctx.fill();
-    }
-    
-     //var neighbors = new Array();  
-
-     var containsmovement = function(x,y) {
-        for (var i = 0; i < neighbors.length; i++) {
-          var x1 = neighbors[i][0];
-          var y1 = neighbors[i][1]
-          if (x1 == x && y1 == y ) {
-            return true;
-        }
-      }
-
-        return false;
-        
-      }
-
-    // Overlay a blue square on tiles where the selected player is allowed to move.
-    var drawMovementSquares = function(n, xLoc, yLoc) {
-      ctx.fillStyle = "rgba(15,150,255, 0.7)";
-      if (n === -1) {
-        return;
-      } else {
-        
-        if(!containsmovement(xLoc, yLoc))
-          {
-            var coord = new Array(2);
-            coord[0] = xLoc;
-            coord[1] = yLoc;
-            neighbors.push(coord);
-          }
-
-        drawMovementSquares(n-1, xLoc - 1, yLoc);
-        drawMovementSquares(n-1, xLoc + 1, yLoc);
-        drawMovementSquares(n-1, xLoc, yLoc + 1);
-        drawMovementSquares(n-1, xLoc, yLoc - 1);
-      }
-    }
-
-    var containsattack = function(x,y) {
-        for (var i = 0; i < attack.length; i++) {
-          var x1 = attack[i][0];
-          var y1 = attack[i][1]
-          if (x1 == x && y1 == y ) {
-            return true;
-        }
-      }
-
-        return false;
-        
-      }
-    // Overlay a green square on tiles where the selected player is allowed to attack.
-    var drawAttackSquares = function(n, xLoc, yLoc) {
-      ctx.fillStyle = "rgba(20,173,0, 0.7)";
-      if (n === -1) {
-        return;
-      } else {
-
-        if(!containsattack(xLoc, yLoc))
-          {
-            var coord = new Array(2);
-            coord[0] = xLoc;
-            coord[1] = yLoc;
-            attack.push(coord);
-          }
-       
-        drawAttackSquares(n-1, xLoc - 1, yLoc);
-        drawAttackSquares(n-1, xLoc + 1, yLoc);
-        drawAttackSquares(n-1, xLoc, yLoc + 1);
-        drawAttackSquares(n-1, xLoc, yLoc - 1);
-      }
-    }
-    
-    // Draws the action menu and sets actionMenuShowing state to true. When this state is
-    // true the player can only move the arrow in the menu and must make a selection or hit
-    // ESC to exit the action menu.
-    var drawActionMenu = function(c) {
-      if (currentActionItem === 0) {
-        drawMovementSquares(c.movementRange, c.x, c.y);
-        for(var k=0; k<neighbors.length; k++){
-            var xcord = neighbors[k][0];
-            var ycord = neighbors[k][1];
-            ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
-        }
-      } else if (currentActionItem === 1) {
-        drawAttackSquares(c.attackRange, c.x, c.y);
-        for(var k=0; k<attack.length; k++){
-            var xcord = attack[k][0];
-            var ycord = attack[k][1];
-            ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
-        }
-      }
-      characterSet.forEach(function(c) {
-        if (currentActionItem == 0) {
-          drawTile(c.x, c.y);
-        }
-        c.draw();
-      });
-      ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
-      ctx.fillRect(10, canvas.height - 160, 135, 150);
-      ctx.font = "24px Croissant One";
-      ctx.fillStyle = "black";
-      ctx.textAlign = "center"
-      var x = 150 / 2 + 10;
-      ctx.fillText("Move", x, canvas.height - 130);
-      ctx.fillText("Attack", x, canvas.height - 80);
-      ctx.fillText("Wait", x, canvas.height - 30);
-      drawActionMenuArrow();
-      actionMenuShowing = true;
-    }
-    
-    // Draws the selected player's status in the right hand corner of the screen
-    // This displays the character's name, hp, and mp.
-    var drawStatusBox = function(c) {
-      ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
-      ctx.fillRect(canvas.width - 300, 10, 290, 80);
-      ctx.font = "16px Croissant One";
-      ctx.fillStyle = "rgba(0,0,0,.7)";
-      ctx.textAlign = "left";
-      // Drop shadow
-      ctx.fillText("Name:    " + c.name, canvas.width - 292, 31);
-      ctx.fillText("HP:", canvas.width - 267, 56);
-      ctx.fillText("MP:", canvas.width - 267, 81);
-      ctx.fillStyle = "white";
-      ctx.fillText("Name:    " + c.name, canvas.width - 290, 30);
-      ctx.fillText("HP:", canvas.width - 265, 55);
-      ctx.fillText("MP:", canvas.width - 265, 80);
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
-      ctx.strokeRect(canvas.width - 215, 45, 180, 10);
-      ctx.strokeRect(canvas.width - 215, 70, 180, 10);
-      ctx.fillStyle = "green";
-      ctx.fillRect(canvas.width - 215, 45, 180 * (c.hp / c.maxHp), 10);
-      ctx.fillStyle = "rgb(28, 95, 212)";
-      ctx.fillRect(canvas.width - 215, 70, 180 * (c.mp / c.maxMp), 10);
-    }
-    
-    var drawDirectionArrowUp = function(x, y, shouldFill) {
-       // Up arrow
-       ctx.beginPath();
-       ctx.moveTo(tileW * x + 12, tileH * y - 5);
-       ctx.lineTo(tileW * x + 20, tileH * y - 13);
-       ctx.lineTo(tileW * x + 28, tileH * y - 5);
-       ctx.closePath();
-       if (shouldFill) {
-         ctx.fill();
-       } else {
-         ctx.stroke();
-       }
-    }
-    
-    var drawDirectionArrowLeft = function(x, y, shouldFill) {
-      ctx.beginPath();
-      ctx.moveTo(tileW * x - 5, tileH * y + 12);
-      ctx.lineTo(tileW * x - 13, tileH * y + 20);
-      ctx.lineTo(tileW * x - 5, tileH * y + 28);
-      ctx.closePath();
-      if (shouldFill) {
-        ctx.fill();
-      } else {
-        ctx.stroke(); 
-      }
-    }
-    
-    var drawDirectionArrowRight = function(x, y, shouldFill) {
-      ctx.beginPath();
-      ctx.moveTo(tileW * (x + 1) + 5, tileH * y + 12);
-      ctx.lineTo(tileW * (x + 1) + 13, tileH * y + 20);
-      ctx.lineTo(tileW * (x + 1) + 5, tileH * y + 28);
-      ctx.closePath();
-      if (shouldFill) {
-        ctx.fill();
-      } else {
-        ctx.stroke();
-      }
-    }
-    
-    var drawDirectionArrowDown = function(x, y, shouldFill) {
-      ctx.beginPath();
-      ctx.moveTo(tileW * x + 12, tileH * (y + 1) + 5);
-      ctx.lineTo(tileW * x + 20, tileH * (y + 1) + 13);
-      ctx.lineTo(tileW * x + 28, tileH * (y + 1) + 5);
-      ctx.closePath();
-      if (shouldFill) {
-        ctx.fill();
-      } else {
-        ctx.stroke();
-      }
-    }
-    
-    var drawWaitingArrows = function(c) {
-      // Up arrow
-      ctx.strokeStyle = "rgb(245, 196, 0)";
-      ctx.lineWidth = 2;
-      drawDirectionArrowUp(c.x, c.y, false);
-      drawDirectionArrowLeft(c.x, c.y, false);
-      drawDirectionArrowRight(c.x, c.y, false);
-      drawDirectionArrowDown(c.x, c.y, false);
-      ctx.fillStyle = "rgb(245, 196, 0)";
-      switch (c.direction) {
-        case 0:
-          drawDirectionArrowUp(c.x, c.y, true);
-          break;
-        case 1:
-          drawDirectionArrowRight(c.x, c.y, true);
-          break;
-        case 2:
-          drawDirectionArrowDown(c.x, c.y, true);
-          break;
-        case 3:
-          drawDirectionArrowLeft(c.x, c.y, true);
-          break;
-        default:
-          break;
-      }
-    }
-    
-    // loads the gamemap by looping through the grid and drawing each tile.
-    var loadmap = function() {
-      var x = 0;
-      var y = 0;
-      for (i = 0; i < grid[0].length; i++) {
-        for (j = 0; j < grid.length; j++) {
-          drawTile(i,j);
-        }
-      }
-    }
-    
-    var circle = function(cx, cy, radius) {
-        ctx.arc(cx, cy, radius, 0, 2*Math.PI, true);
-    }
-    
-    var drawCharacterSide = function(x, y) {
-      ctx.fillStyle = "green";
-      ctx.beginPath();
-      circle(tileW * (x + 1) - 6,tileH * y + 4, 3);
-      ctx.fill();
-      ctx.strokeStyle = "white";
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      circle(tileW * (x + 1) - 6,tileH * y + 4, 3);
-      ctx.stroke();
-    }
-    
-    // Character classes //
-    // Represents an Archer unit in the game.
-    var Archer = function(x, y) {
-      this.x = x;
-      this.y = y;
-      this.movementRange = 4;
-      this.attackRange = 4;
-      this.hp = 50;
-      this.maxHp = 50;
-      this.mp = 0;
-      this.maxMp = 1;
-      this.name = "Archer";
-      this.direction = 2;
-      this.isSelected = false;
-      this.isMoving = false;
-      this.isAttacking = false;
-      this.hasMoved = false;
-      this.hasAttacked = false;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 13, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-        if (!(this.hasMoved && this.hasAttacked))
-          drawCharacterSide(this.x, this.y);
-      }
-    }
-    
-    // Represents a Warrior unit in the game.
-    var Warrior = function(x, y) {
-      this.x = x;
-      this.y = y;
-      this.movementRange = 3;
-      this.attackRange = 1;
-      this.hp = 75;
-      this.maxHp = 75;
-      this.mp = 0;
-      this.maxMp = 1;
-      this.name = "Warrior";
-      this.direction = 2;
-      this.isSelected = false;
-      this.isMoving = false;
-      this.isAttacking = false;
-      this.hasMoved = false;
-      this.hasAttacked = false;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 1, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-        if (!(this.hasMoved && this.hasAttacked))
-          drawCharacterSide(this.x, this.y);
-      }
-    }
-    
-    // Represents a Mage unit in the game.
-    var Mage = function(x, y) {
-      this.x = x;
-      this.y = y;
-      this.movementRange = 3;
-      this.attackRange = 1;
-      this.hp = 45;
-      this.maxHp = 45;
-      this.mp = 40;
-      this.maxMp = 40;
-      this.name = "Mage";
-      this.direction = 2;
-      this.isSelected = false;
-      this.isMoving = false;
-      this.isAttacking = false;
-      this.hasMoved = false;
-      this.hasAttacked = false;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 4, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-        if (!(this.hasMoved && this.hasAttacked))
-          drawCharacterSide(this.x, this.y);
-      }
-    }
-    
-    // Represents a Mage unit in the game.
-    var Ninja = function(x, y) {
-      this.x = x;
-      this.y = y;
-      this.movementRange = 5;
-      this.attackRange = 1;
-      this.hp = 45;
-      this.maxHp = 45;
-      this.mp = 20;
-      this.maxMp = 20;
-      this.name = "Ninja";
-      this.direction = 2;
-      this.isSelected = false;
-      this.isMoving = false;
-      this.isAttacking = false;
-      this.hasMoved = false;
-      this.hasAttacked = false;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 10, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-        if (!(this.hasMoved && this.hasAttacked))
-          drawCharacterSide(this.x, this.y);
-      }
-    }
-    
-    // Represents a Cleric unit in the game.
-    var Cleric = function(x, y) {
-      this.x = x;
-      this.y = y;
-      this.movementRange = 3;
-      this.attackRange = 1;
-      this.hp = 45;
-      this.maxHp = 45;
-      this.mp = 40;
-      this.maxMp = 40;
-      this.name = "Cleric";
-      this.direction = 2;
-      this.isSelected = false;
-      this.isMoving = false;
-      this.isAttacking = false;
-      this.hasMoved = false;
-      this.hasAttacked = false;
-      this.draw = function() {
-        ctx.drawImage(characters, charW * 7, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-        if (!(this.hasMoved && this.hasAttacked))
-          drawCharacterSide(this.x, this.y);
-      }
-    }
-    
-    
-    // populate the board with some starting units.
-    characterSet.push(new Archer(2,3));
-    characterSet.push(new Cleric(2,2));
-    characterSet.push(new Ninja(3,2));
-    characterSet.push(new Mage(1,4));
-    characterSet.push(new Warrior(3,4));
-    
     // white outline around squares which represents the player's cursor. This allows the player
     // to make selections, pick tiles to move to, pick tiles to attack, etc.
-    var Cursor = function(x,y) {
+    Cursor = function(ctx, x,y) {
       this.x = x;
       this.y = y;
-      this.draw = function() {
+      this.draw = function(ctx) {
         ctx.strokeStyle = "white"
         ctx.lineWidth = 2;
         ctx.strokeRect(tileW * this.x, tileH * this.y, tileW - 2, tileH - 2);
@@ -572,252 +174,51 @@
     }
     
     // initialize the cursor at the top left of the game board.
-    cursor = new Cursor(0,0); 
-    
-    // The player selected something in the action menu, so let's handle that.
-    var madeActionSelection = function(c) {
-      switch (currentActionItem) {
-        case 0:
-          c.isMoving = true;
-          characterIsMoving = true;
-          break;
-        case 1:
-          c.isAttacking = true;
-          characterIsAttacking = true;
-          break;
-        case 2:
-          characterIsWaiting = true;
-          break;
-        default:
-          break;
-      }
-    }
-    
-    // The action menu is currently being displayed, so handle any 
-    // subsequent events.
-    var handleActionMenu = function(e) {
-      switch (e.keyCode) {
-        case 38:
-          if (currentActionItem > 0) currentActionItem--;
-          break;
-        case 40:
-          if (currentActionItem < 2) currentActionItem++;
-          break;
-        case 13:
-          characterSet.forEach(function (c) {
-            if (cursor.x === c.x && cursor.y === c.y) {
-              actionMenuShowing = false;
-              c.isSelected = true;
-              madeActionSelection(c);
-            }
-          });
-          break;
-      }
-    }
-    
-    // check if the tile at newX, newY is occupied by another character.
-    var alreadyOccupied = function(newX, newY) {
-      isOccupied = false;
-      characterSet.forEach(function(c) {
-        if (c.x === newX && c.y === newY) {
-          isOccupied = true;
-        }
-      });
-      return isOccupied;
-    }
-    
-    // find the character at location (xLoc, yLoc)
-    var characterAtLocation = function(xLoc, yLoc) {
-      var charAtLoc = null;
-      characterSet.forEach(function(c) {
-        if (c.x === xLoc && c.y === yLoc) {
-          charAtLoc = c;
-        }
-      });
-      return charAtLoc;
-    }
-    
-    var handleCharacterWaiting = function(e) {
-      switch(e.keyCode) {
-        case 37:
-          selectedCharacter.direction = 3;
-          break;
-        case 38:
-          selectedCharacter.direction = 0;
-          break;
-        case 39:
-          selectedCharacter.direction = 1;
-          break;
-        case 40:
-          selectedCharacter.direction = 2;
-          break;
-        case 13:
-          selectedCharacter.hasAttacked = true;
-          selectedCharacter.hasMoved = true;
-          resetGameState();
-          break;
-      }
-    }
-    
-    // The characterIsMoving game state is active, so lets handle movement.
-    var handleCharacterMoving = function(e) {
-      var curX = cursor.x;
-      var curY = cursor.y;
-      switch(e.keyCode) {
-        case 37:
-          cursor.moveLeft();
-          break;
-        case 38:
-          cursor.moveUp();
-          break;
-        case 39:
-          cursor.moveRight();
-          break;
-        case 40:
-          cursor.moveDown();
-          break;
-        case 13:
-          if (!alreadyOccupied(curX, curY)) {
-            selectedCharacter.x = cursor.x;
-            selectedCharacter.y = cursor.y;
-            selectedCharacter.hasMoved = true;
-            resetGameState();
-            return;
-          }
-          break;
-      }
-      var dist = Math.abs(cursor.x - selectedCharacter.x) + Math.abs(cursor.y - selectedCharacter.y);
-      if (dist > selectedCharacter.movementRange) {
-        cursor.x = curX;
-        cursor.y = curY;
-      }
-    };
-    
-    // the characterIsAttacking game state is active, so let's handle attacking.
-    var handleCharacterAttacking = function(e) {
-      var curX = cursor.x;
-      var curY = cursor.y;
-      switch(e.keyCode) {
-        case 37:
-          cursor.moveLeft();
-          break;
-        case 38:
-          cursor.moveUp();
-          break;
-        case 39:
-          cursor.moveRight();
-          break;
-        case 40:
-          cursor.moveDown();
-          break;
-        case 13:
-          // cannot attack yourself
-          if (curX === selectedCharacter.x && curY === selectedCharacter.y) 
-            return;
-          // there is someone there we can attack!
-          if (alreadyOccupied(curX, curY)) {
-            var attackedPlayer = characterAtLocation(curX, curY);
-            console.log(selectedCharacter.name + " attacked " + attackedPlayer.name);
-            selectedCharacter.hasAttacked = true;
-            resetGameState();
-            return;
-          }
-          break;
-      }
-      var dist = Math.abs(cursor.x - selectedCharacter.x) + Math.abs(cursor.y - selectedCharacter.y);
-      if (dist > selectedCharacter.attackRange) {
-        cursor.x = curX;
-        cursor.y = curY;
-      }
-    };
-    
-    // Allows the cursor to move around the game board. This is only called when we are not
-    // moving, attacking, or selecting an action item.
-    var handleCursorMovement = function(e) {
-      switch(e.keyCode) {
-        case 37:
-          cursor.moveLeft();
-          break;
-        case 38:
-          cursor.moveUp();
-          break;
-        case 39:
-          cursor.moveRight();
-          break;
-        case 40:
-          cursor.moveDown();
-          break;
-        case 13:
-          characterSet.forEach(function (c) {
-            if (cursor.x === c.x && cursor.y === c.y) {
-              if (c.hasMoved && c.hasAttacked){
-                console.log(c.name + " cannot act again this turn.");
-                return;
-              }
-              c.isSelected = true;
-              actionMenuShowing = true;
-              selectedCharacter = c;
-            }
-          });
-      }
-    };
-    
-    // Keyboard event handler that dispatches the event to the proper
-    // function which will handle it based on the current game state.
-    // note that game states exist in a hierarchy to make sure players
-    // are limited to certain actions based on the current state.
-    var keyboardHandler = function(e) {
-      if (e.keyCode === 27) { // ESC key
-        resetGameState();
-      } else if (actionMenuShowing) {
-        handleActionMenu(e);
-      } else if (characterIsMoving) {
-        handleCharacterMoving(e);
-      } else if (characterIsAttacking) {
-        handleCharacterAttacking(e);
-      } else if (characterIsWaiting) {
-        handleCharacterWaiting(e);
-      } else {
-        handleCursorMovement(e);
-      }
-    };
+    cursor = new Cursor(ctx, 0,0); 
     
     canvas.addEventListener('keydown', keyboardHandler, true);
     canvas.setAttribute('tabindex', '0');
     canvas.focus();
     
+    // populate the board with some starting units.
+    characterSet.push(new Archer(ctx, 2,3));
+    characterSet.push(new Cleric(ctx, 2,2));
+    characterSet.push(new Ninja(ctx, 3,2));
+    characterSet.push(new Mage(ctx, 1,4));
+    characterSet.push(new Warrior(ctx, 3,4));
+    
     // The draw function to continually update the canvas with data.
-    var draw = function() {
+    draw = function() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      loadmap();
+      loadmap(ctx);
       characterSet.forEach(function(c) {
         if (c.isSelected) {
           if (actionMenuShowing) {
-            drawActionMenu(c);
+            drawActionMenu(ctx, c);
           } else if (characterIsMoving) {
-            drawMovementSquares(c.movementRange, c.x, c.y);
+            drawMovementSquares(ctx, c.movementRange, c.x, c.y);
             for(var k=0; k<neighbors.length; k++){
-            var xcord = neighbors[k][0];
-            var ycord = neighbors[k][1];
-            ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
-          }
+              var xcord = neighbors[k][0];
+              var ycord = neighbors[k][1];
+              ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+            }
           } else if (characterIsAttacking) {
-            drawAttackSquares(c.attackRange, c.x, c.y);
+            drawAttackSquares(ctx, c.attackRange, c.x, c.y);
           }
-          drawStatusBox(c);
+          drawStatusBox(ctx, c);
         }
-        c.draw();
+        c.draw(ctx);
       });
       characterSet.forEach(function(c) {
         if (characterIsMoving) {
-          drawTile(c.x, c.y);
+          drawTile(ctx, c.x, c.y);
         }
-        c.draw();
+        c.draw(ctx);
       });
       if (characterIsWaiting) {
-        drawWaitingArrows(selectedCharacter);
+        drawWaitingArrows(ctx, selectedCharacter);
       } else {
-        cursor.draw();
+        cursor.draw(ctx);
       }
     }
     
