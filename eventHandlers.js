@@ -1,10 +1,18 @@
 // SCRIPT 3 - event handlers
 
-//@TODO pmarino: this function 
 killCharacter = function(c) {
-	//do something :( 
-	//maybe set a "dead" field and do it that way, not displaying dead characters? 
-	//would cause movement issues so likely better to do the legwork.
+	var index = -1;
+	//var index = characterSet.indexOf(c); 
+	//maybe try something like this to be more efficient, but not necessary 
+	for (var i=0; i < characterSet.length; i++) {
+		if (characterSet[i].id === c.id) {
+			index = i;
+			break;
+		}
+	}
+	if (index >= 0) {
+		characterSet.splice(index,1);
+	}
 }
 
 //@TODO pmarino: allow for handleMagic within this function?
