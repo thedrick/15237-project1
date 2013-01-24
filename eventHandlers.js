@@ -1,15 +1,18 @@
 // SCRIPT 3 - event handlers
 
+//@TODO pmarino: maybe we should start passing around uids instead of characters to functions here.
+
 killCharacter = function(c) {
 	var index = -1;
 	//var index = characterSet.indexOf(c); 
 	//maybe try something like this to be more efficient, but not necessary 
 	for (var i=0; i < characterSet.length; i++) {
-		if (characterSet[i].id === c.id) {
+		if (characterSet[i].uid === c.uid) {
 			index = i;
 			break;
 		}
 	}
+	console.log(index);
 	if (index >= 0) {
 		characterSet.splice(index,1);
 	}

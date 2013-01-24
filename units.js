@@ -11,7 +11,7 @@ Archer = function(ctx, x, y) {
   this.uid = uidGen();
   this.movementRange = 4;
   
-  this.attackStrength = 13 //magic number 
+  this.attackStrength = 130 //magic number ,testing killCharacter() 
   
   this.attackRange = 4;
   this.hp = 50;
