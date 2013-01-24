@@ -1,11 +1,17 @@
 // SCRIPT 2 - contains unit definitions for the game.
 // Character classes //
-// Represents an Archer unit in the game
 
+//@TODO pmarino: decide reasonable damage values.
+//@TODO pmarino: turn-by-turn incremental restoration of MP
+
+// Represents an Archer unit in the game
 Archer = function(ctx, x, y) {
   this.x = x;
   this.y = y;
   this.movementRange = 4;
+  
+  this.attackStrength = 13 //magic number 
+  
   this.attackRange = 4;
   this.hp = 50;
   this.maxHp = 50;
@@ -31,6 +37,9 @@ Warrior = function(ctx, x, y) {
   this.y = y;
   this.movementRange = 3;
   this.attackRange = 1;
+  
+  this.attackStrength = 26 //magic number 
+  
   this.hp = 75;
   this.maxHp = 75;
   this.mp = 0;
@@ -55,6 +64,11 @@ Mage = function(ctx, x, y) {
   this.y = y;
   this.movementRange = 3;
   this.attackRange = 1;
+  
+  this.attackStrength = 12 //magic numbers
+  this.magicStrength = 30
+  this.magicCost = 20
+  
   this.hp = 45;
   this.maxHp = 45;
   this.mp = 40;
@@ -73,12 +87,16 @@ Mage = function(ctx, x, y) {
   }
 }
 
-// Represents a Mage unit in the game.
+// Represents a Ninja unit in the game.
+//@TODO pmarino: if Ninjas attack from behind, dmg multiplier? down the road of course
 Ninja = function(ctx, x, y) {
   this.x = x;
   this.y = y;
   this.movementRange = 5;
   this.attackRange = 1;
+  
+  this.attackStrength = 16 //magic number 
+  
   this.hp = 45;
   this.maxHp = 45;
   this.mp = 20;
@@ -98,11 +116,17 @@ Ninja = function(ctx, x, y) {
 }
 
 // Represents a Cleric unit in the game.
+// currently clerics can only heal, and can heal enemies by design
 Cleric = function(ctx, x, y) {
   this.x = x;
   this.y = y;
   this.movementRange = 3;
   this.attackRange = 1;
+  
+  this.attackStrength = 5
+  this.magicStrength = -25 //magic number
+  this.magicCost = 20
+  
   this.hp = 45;
   this.maxHp = 45;
   this.mp = 40;

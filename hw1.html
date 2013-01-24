@@ -204,6 +204,11 @@
             }
           } else if (characterIsAttacking) {
             drawAttackSquares(ctx, c.attackRange, c.x, c.y);
+			 for(var k=0; k<attack.length; k++){
+              var xcord = attack[k][0];
+              var ycord = attack[k][1];
+              ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+            }
           }
           drawStatusBox(ctx, c);
         }

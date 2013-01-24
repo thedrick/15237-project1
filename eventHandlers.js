@@ -1,4 +1,27 @@
 // SCRIPT 3 - event handlers
+
+//@TODO pmarino: this function 
+killCharacter = function(c) {
+	//do something :( 
+	//maybe set a "dead" field and do it that way, not displaying dead characters? 
+	//would cause movement issues so likely better to do the legwork.
+}
+
+//@TODO pmarino: allow for handleMagic within this function?
+// The player arg[0] attacked the player arg[1]
+// :| race conditions here
+handleAttack = function(cAttacking, cAttacked) {
+	currentHP = cAttacked.hp;
+	currentAttack = cAttacking.attackStrength; //maybe magicStrength wah
+	currentHP -= currentAttack;
+	cAttacked.hp = currentHP;
+	console.log("wat");
+	if (currentHP <= 0) {
+		killCharacter(cAttacked);
+	} 
+	
+}
+
 // The player selected something in the action menu, so let's handle that.
 madeActionSelection = function(c) {
   switch (currentActionItem) {
@@ -143,6 +166,7 @@ handleCharacterAttacking = function(e) {
       if (alreadyOccupied(curX, curY)) {
         var attackedPlayer = characterAtLocation(curX, curY);
         console.log(selectedCharacter.name + " attacked " + attackedPlayer.name);
+		handleAttack(selectedCharacter, attackedPlayer);
         selectedCharacter.hasAttacked = true;
         resetGameState();
         return;
