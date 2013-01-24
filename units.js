@@ -5,13 +5,14 @@
 //@TODO pmarino: turn-by-turn incremental restoration of MP
 
 // Represents an Archer unit in the game
-Archer = function(ctx, x, y) {
+Archer = function(ctx, x, y, id) {
+  this.id = id;
   this.x = x;
   this.y = y;
   this.uid = uidGen();
   this.movementRange = 4;
   
-  this.attackStrength = 13 //magic number 
+  this.attackStrength = 130 //magic number, testing killCharacter()
   
   this.attackRange = 4;
   this.hp = 50;
@@ -33,7 +34,8 @@ Archer = function(ctx, x, y) {
 }
 
 // Represents a Warrior unit in the game.
-Warrior = function(ctx, x, y) {
+Warrior = function(ctx, x, y, id) {
+  this.id = id;
   this.x = x;
   this.y = y;
   this.movementRange = 3;
@@ -61,7 +63,8 @@ Warrior = function(ctx, x, y) {
 }
 
 // Represents a Mage unit in the game.
-Mage = function(ctx, x, y) {
+Mage = function(ctx, x, y, id) {
+  this.id = id;
   this.x = x;
   this.y = y;
   this.movementRange = 3;
@@ -92,7 +95,8 @@ Mage = function(ctx, x, y) {
 
 // Represents a Ninja unit in the game.
 //@TODO pmarino: if Ninjas attack from behind, dmg multiplier? down the road of course
-Ninja = function(ctx, x, y) {
+Ninja = function(ctx, x, y, id) {
+  this.id = id;
   this.x = x;
   this.y = y;
   this.movementRange = 5;
@@ -121,7 +125,8 @@ Ninja = function(ctx, x, y) {
 
 // Represents a Cleric unit in the game.
 // currently clerics can only heal, and can heal enemies by design
-Cleric = function(ctx, x, y) {
+Cleric = function(ctx, x, y, id) {
+  this.id = id;
   this.x = x;
   this.y = y;
   this.movementRange = 3;

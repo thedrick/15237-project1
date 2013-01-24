@@ -190,11 +190,11 @@
     canvas.focus();
     
     // populate the board with some starting units.
-    characterSet.push(new Archer(ctx, 2,3));
-    characterSet.push(new Cleric(ctx, 2,2));
-    characterSet.push(new Ninja(ctx, 3,2));
-    characterSet.push(new Mage(ctx, 1,4));
-    characterSet.push(new Warrior(ctx, 3,4));
+    characterSet.push(new Archer(ctx, 2,3, Math.random()));
+    characterSet.push(new Cleric(ctx, 2,2, Math.random()));
+    characterSet.push(new Ninja(ctx, 3,2, Math.random()));
+    characterSet.push(new Mage(ctx, 1,4, Math.random()));
+    characterSet.push(new Warrior(ctx, 3,4, Math.random()));
     
     // The draw function to continually update the canvas with data.
     draw = function() {
