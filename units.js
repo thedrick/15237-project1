@@ -8,6 +8,7 @@
 Archer = function(ctx, x, y) {
   this.x = x;
   this.y = y;
+  this.uid = uidGen();
   this.movementRange = 4;
   
   this.attackStrength = 13 //magic number 
@@ -37,6 +38,7 @@ Warrior = function(ctx, x, y) {
   this.y = y;
   this.movementRange = 3;
   this.attackRange = 1;
+  this.uid = uidGen();
   
   this.attackStrength = 26 //magic number 
   
@@ -64,6 +66,7 @@ Mage = function(ctx, x, y) {
   this.y = y;
   this.movementRange = 3;
   this.attackRange = 1;
+  this.uid = uidGen();
   
   this.attackStrength = 12 //magic numbers
   this.magicStrength = 30
@@ -94,6 +97,7 @@ Ninja = function(ctx, x, y) {
   this.y = y;
   this.movementRange = 5;
   this.attackRange = 1;
+  this.uid = uidGen();
   
   this.attackStrength = 16 //magic number 
   
@@ -122,6 +126,7 @@ Cleric = function(ctx, x, y) {
   this.y = y;
   this.movementRange = 3;
   this.attackRange = 1;
+  this.uid = uidGen();
   
   this.attackStrength = 5
   this.magicStrength = -25 //magic number

@@ -76,13 +76,22 @@
   var handleCharacterWaiting;
   var handleCharacterMoving;
   var handleCharacterAttacking;
-  var handleCursorMovement
-  var keyboardHandler
+  var handleCursorMovement;
+  var keyboardHandler;
   
   // Defined below
-  var App
+  var App;
   var resetGameStates;
   var draw;
+  
+  // Unique ID generator
+  var uniqueID = function() {
+    var currentID = 0;
+    return function() {
+      return ++currentID;
+    }
+  }
+  var uidGen = uniqueID();
   </script>
   
   <script src="gameDrawing.js" ></script>
