@@ -171,19 +171,23 @@ drawAttackSquares = function(ctx, n, xLoc, yLoc) {
 // ESC to exit the action menu.
 drawActionMenu = function(ctx, c) {
   if (currentActionItem === 0) {
-    drawMovementSquares(ctx, c.movementRange, c.x, c.y);
-    for(var k=0; k<neighbors.length; k++){
-        var xcord = neighbors[k][0];
-        var ycord = neighbors[k][1];
-        ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+    if (!c.hasMoved) {
+      drawMovementSquares(ctx, c.movementRange, c.x, c.y);
+      for(var k=0; k<neighbors.length; k++){
+          var xcord = neighbors[k][0];
+          var ycord = neighbors[k][1];
+          ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+      }
     }
   } else if (currentActionItem === 1) {
-    drawAttackSquares(ctx, c.attackRange, c.x, c.y);
-    for(var k=0; k<attack.length; k++){
-        var xcord = attack[k][0];
-        var ycord = attack[k][1];
-        ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
-    }
+    if (!c.hasAttacked) {
+      drawAttackSquares(ctx, c.attackRange, c.x, c.y);
+      for(var k=0; k<attack.length; k++){
+          var xcord = attack[k][0];
+          var ycord = attack[k][1];
+          ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+      }
+	}
   }
   characterSet.forEach(function(c) {
     if (currentActionItem == 0) {
@@ -325,8 +329,13 @@ circle = function(ctx, cx, cy, radius) {
   ctx.arc(cx, cy, radius, 0, 2*Math.PI, true);
 }
 
-drawCharacterSide = function(ctx, x, y) {
-  ctx.fillStyle = "green";
+drawCharacterSide = function(ctx, x, y, team) {
+  if (team === 1) {
+	ctx.fillStyle = "blue";
+	}
+  if (team === 2) {
+	ctx.fillStyle = "red";
+	}
   ctx.beginPath();
   circle(ctx, tileW * (x + 1) - 6,tileH * y + 4, 3);
   ctx.fill();

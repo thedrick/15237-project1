@@ -2,6 +2,17 @@
 
 //@TODO pmarino: maybe we should start passing around uids instead of characters to functions here.
 
+switchTurn = function() {
+	console.log("Switching now.");
+	for (var i=0; i < characterSet.length; i++) {
+		characterSet[i].hasMoved = false;
+		characterSet[i].hasAttacked = false;
+		characterSet[i].myTurn = !(characterSet[i].myTurn);
+	}
+	currentPlayer = ((currentPlayer === 1) ? 2 : 1);
+}
+
+
 killCharacter = function(c) {
 	var index = -1;
 	//var index = characterSet.indexOf(c); 
@@ -20,12 +31,11 @@ killCharacter = function(c) {
 
 //@TODO pmarino: allow for handleMagic within this function?
 // The player arg[0] attacked the player arg[1]
-// :| race conditions here
 handleAttack = function(cAttacking, cAttacked) {
 	currentHP = cAttacked.hp;
 	currentAttack = cAttacking.attackStrength; //maybe magicStrength wah
 	currentHP -= currentAttack;
-	cAttacked.hp = currentHP;
+	cAttacked.hp = ((currentHP > cAttacked.maxHP) ? cAttacked.maxHP : currentHP);
 	console.log("wat");
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
@@ -37,10 +47,16 @@ handleAttack = function(cAttacking, cAttacked) {
 madeActionSelection = function(c) {
   switch (currentActionItem) {
     case 0:
+	  if (selectedCharacter.hasMoved) {
+        return;
+      }
       c.isMoving = true;
       characterIsMoving = true;
       break;
     case 1:
+	  if (selectedCharacter.hasMoved) {
+        return;
+      }
       c.isAttacking = true;
       characterIsAttacking = true;
       break;
@@ -210,8 +226,8 @@ handleCursorMovement = function(e) {
     case 13:
       characterSet.forEach(function (c) {
         if (cursor.x === c.x && cursor.y === c.y) {
-          if (c.hasMoved && c.hasAttacked){
-            console.log(c.name + " cannot act again this turn.");
+          if ((c.hasMoved && c.hasAttacked) || (!c.myTurn)){
+            console.log(c.name + " cannot act again this turn. myTurn:" + c.myTurn);
             return;
           }
           c.isSelected = true;

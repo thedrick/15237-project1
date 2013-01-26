@@ -10,6 +10,9 @@
 </style>
   <canvas id="canvas" width="1000", height="600", style="border:1px solid #000000"></canvas>
   <script>
+  
+  var currentPlayer;
+  
   // CONSTANTS 
   var canvas;
   var ctx;
@@ -118,7 +121,8 @@
     charHoffset = 2;
 
     // Global states that represent the current actions allowed or unallowed
-    selectedCharacter = null;
+    currentPlayer = 1;
+	selectedCharacter = null;
     actionMenuShowing = false;
     characterIsMoving = false;
     characterIsAttacking = false;
@@ -148,6 +152,18 @@
       currentActionItem = 0;
       neighbors = [];
       attack = [];
+	  
+	  var noMovesLeft = true;
+	  for (var i = 0; i < characterSet.length; i++) {
+		if (characterSet[i].myTurn && (!(characterSet[i].hasMoved && characterSet[i].hasAttacked))) {
+			console.log(!(characterSet[i].hasAttacked && characterSet[i].hasMoved));
+			noMovesLeft = false;
+			break;
+		}
+	  }
+	  if (noMovesLeft) {
+		switchTurn();
+	  }
     }
     
     // white outline around squares which represents the player's cursor. This allows the player
@@ -190,12 +206,18 @@
     canvas.focus();
     
     // populate the board with some starting units.
-    characterSet.push(new Archer(ctx, 2,3));
-    characterSet.push(new Cleric(ctx, 2,2));
-    characterSet.push(new Ninja(ctx, 3,2));
-    characterSet.push(new Mage(ctx, 1,4));
-    characterSet.push(new Warrior(ctx, 3,4));
+    characterSet.push(new Archer(ctx, 2,3, 1));
+    characterSet.push(new Cleric(ctx, 2,2, 1));
+    characterSet.push(new Ninja(ctx, 3,2, 1));
+    characterSet.push(new Mage(ctx, 1,4, 1));
+    characterSet.push(new Warrior(ctx, 3,4, 1));
     
+	characterSet.push(new Archer(ctx, 6,9, 2));
+    characterSet.push(new Cleric(ctx, 6,6, 2));
+    characterSet.push(new Ninja(ctx, 9,6, 2));
+    characterSet.push(new Mage(ctx, 3,12, 2));
+    characterSet.push(new Warrior(ctx, 9,12, 2));
+	
     // The draw function to continually update the canvas with data.
     draw = function() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);

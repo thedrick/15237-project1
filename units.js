@@ -5,11 +5,12 @@
 //@TODO pmarino: turn-by-turn incremental restoration of MP
 
 // Represents an Archer unit in the game
-Archer = function(ctx, x, y) {
+Archer = function(ctx, x, y, team) {
   this.x = x;
   this.y = y;
   this.uid = uidGen();
   this.movementRange = 4;
+  this.team = team;
   
   this.attackStrength = 130 //magic number ,testing killCharacter() 
   
@@ -25,17 +26,19 @@ Archer = function(ctx, x, y) {
   this.isAttacking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
+  this.myTurn = ((team === currentPlayer) ? true : false);
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 13, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-    if (!(this.hasMoved && this.hasAttacked))
-      drawCharacterSide(ctx, this.x, this.y);
+    if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+      drawCharacterSide(ctx, this.x, this.y, this.team);
   }
 }
 
 // Represents a Warrior unit in the game.
-Warrior = function(ctx, x, y) {
+Warrior = function(ctx, x, y,team) {
   this.x = x;
   this.y = y;
+  this.team = team;
   this.movementRange = 3;
   this.attackRange = 1;
   this.uid = uidGen();
@@ -53,15 +56,17 @@ Warrior = function(ctx, x, y) {
   this.isAttacking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
+  this.myTurn = ((team === currentPlayer) ? true : false);
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 1, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-    if (!(this.hasMoved && this.hasAttacked))
-      drawCharacterSide(ctx, this.x, this.y);
+    if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+      drawCharacterSide(ctx, this.x, this.y, this.team);
   }
 }
 
 // Represents a Mage unit in the game.
-Mage = function(ctx, x, y) {
+Mage = function(ctx, x, y,team) {
+  this.team = team;
   this.x = x;
   this.y = y;
   this.movementRange = 3;
@@ -83,18 +88,20 @@ Mage = function(ctx, x, y) {
   this.isAttacking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
+  this.myTurn = ((team === currentPlayer) ? true : false);
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 4, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-    if (!(this.hasMoved && this.hasAttacked))
-      drawCharacterSide(ctx, this.x, this.y);
+    if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+      drawCharacterSide(ctx, this.x, this.y, this.team);
   }
 }
 
 // Represents a Ninja unit in the game.
 //@TODO pmarino: if Ninjas attack from behind, dmg multiplier? down the road of course
-Ninja = function(ctx, x, y) {
+Ninja = function(ctx, x, y,team) {
   this.x = x;
   this.y = y;
+  this.team = team;
   this.movementRange = 5;
   this.attackRange = 1;
   this.uid = uidGen();
@@ -112,18 +119,20 @@ Ninja = function(ctx, x, y) {
   this.isAttacking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
+  this.myTurn = ((team === currentPlayer) ? true : false);
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 10, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-    if (!(this.hasMoved && this.hasAttacked))
-      drawCharacterSide(ctx, this.x, this.y);
+    if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+      drawCharacterSide(ctx, this.x, this.y, this.team);
   }
 }
 
 // Represents a Cleric unit in the game.
 // currently clerics can only heal, and can heal enemies by design
-Cleric = function(ctx, x, y) {
+Cleric = function(ctx, x, y,team) {
   this.x = x;
   this.y = y;
+  this.team = team;
   this.movementRange = 3;
   this.attackRange = 1;
   this.uid = uidGen();
@@ -143,9 +152,10 @@ Cleric = function(ctx, x, y) {
   this.isAttacking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
+  this.myTurn = ((team === currentPlayer) ? true : false);
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 7, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-    if (!(this.hasMoved && this.hasAttacked))
-      drawCharacterSide(ctx, this.x, this.y);
+    if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+      drawCharacterSide(ctx, this.x, this.y, this.team);
   }
 }
