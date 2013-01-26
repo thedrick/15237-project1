@@ -1,8 +1,8 @@
 ### High-Pri
-+ Attacking
-+ Players / turns
-+ damage / magic point values and multipliers
++ character stats values (currently magic numbers)
++ start/end conditions (welcome, character placement, game over)
++ damage / magic point multipliers (difficulty?)
 
 ### Med-Pri
-+ Directional sprites (wait command specifically)
++ Directional sprites for attack/magic commands
 + Animation (especially for moving)

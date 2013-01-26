@@ -2,9 +2,16 @@
 
 //@TODO pmarino: maybe we should start passing around uids instead of characters to functions here.
 
+hasMP = function(c) {
+	return (c.mp >= c.magicCost);
+}
+
 switchTurn = function() {
 	console.log("Switching now.");
 	for (var i=0; i < characterSet.length; i++) {
+	    if (characterSet[i].isMagical) {
+		   characterSet[i].mp = ((characterSet[i].mp + 5 < characterSet[i].maxMp) ? characterSet[i].mp += 5 : characterSet[i].maxMp); 
+		}
 		characterSet[i].hasMoved = false;
 		characterSet[i].hasAttacked = false;
 		characterSet[i].myTurn = !(characterSet[i].myTurn);
@@ -48,6 +55,7 @@ handleMagic = function(cAttacking, cAttacked) {
 	cAttacking.mp -= cAttacking.magicCost;
 	currentHP -= currentMagic;
 	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP);
+	console.log(currentHP);
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	}
@@ -66,6 +74,7 @@ madeActionSelection = function(c, b) {
       break;
     case 1:
 	  if (selectedCharacter.hasAttacked) {
+	    currentActionItem = 0;
         break;
       }
       c.isAttacking = true;
@@ -77,7 +86,8 @@ madeActionSelection = function(c, b) {
 		break;
 	  }
 	  else {
-	    if (selectedCharacter.hasAttacked) {
+	    if (selectedCharacter.hasAttacked || (!hasMP(c))) {
+		  currentActionItem = 0;
           break;
         }
 		characterIsMagicking = true;
@@ -110,7 +120,7 @@ handleActionMenu = function(e) {
           actionMenuShowing = false;
 		  actionMagicMenuShowing = false
           c.isSelected = true;
-          madeActionSelection(c, c.isMagical);
+          madeActionSelection(c, c.isMagical, e);
         }
       });
       break;

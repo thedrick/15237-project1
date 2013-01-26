@@ -33,6 +33,7 @@
   // Global states that represent the current actions allowed or unallowed
   var selectedCharacter;
   var actionMenuShowing;
+  var actionMagicMenuShowing;
   var characterIsMoving;
   var characterIsAttacking;
   var characterIsMagicking;
@@ -76,6 +77,11 @@
   
   // Event handlers - located in eventHandlers.js
   var madeActionSelection;
+  var handleAttack;
+  var handleMagic;
+  var killCharacter;
+  var switchTurn;
+  var hasMP;
   var handleActionMenu;
   var alreadyOccupied;
   var characterAtLocation;

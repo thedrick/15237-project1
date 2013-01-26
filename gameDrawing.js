@@ -291,7 +291,7 @@ drawActionMagicMenu = function(ctx, c) {
 	}
   }
   else if (currentActionItem === 2) {
-    if (!c.hasAttacked) {
+    if (!c.hasAttacked && hasMP(c)) {
       drawMagicSquares(ctx, c.magicRange, c.x, c.y);
       for(var k=0; k<magic.length; k++){
           var xcord = magic[k][0];
