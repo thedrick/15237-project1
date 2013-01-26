@@ -13,8 +13,8 @@ Archer = function(ctx, x, y, team) {
   this.team = team;
   
   this.attackStrength = 130 //magic number ,testing killCharacter() 
-  
   this.attackRange = 4;
+  this.isMagical = false;
   this.hp = 50;
   this.maxHp = 50;
   this.mp = 0;
@@ -24,6 +24,7 @@ Archer = function(ctx, x, y, team) {
   this.isSelected = false;
   this.isMoving = false;
   this.isAttacking = false;
+  this.isMagicking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
@@ -44,7 +45,7 @@ Warrior = function(ctx, x, y,team) {
   this.uid = uidGen();
   
   this.attackStrength = 26 //magic number 
-  
+  this.isMagical = false;
   this.hp = 75;
   this.maxHp = 75;
   this.mp = 0;
@@ -54,6 +55,7 @@ Warrior = function(ctx, x, y,team) {
   this.isSelected = false;
   this.isMoving = false;
   this.isAttacking = false;
+  this.isMagicking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
@@ -72,7 +74,8 @@ Mage = function(ctx, x, y,team) {
   this.movementRange = 3;
   this.attackRange = 1;
   this.uid = uidGen();
-  
+  this.isMagical = true;
+  this.magicRange = 2;
   this.attackStrength = 12 //magic numbers
   this.magicStrength = 30
   this.magicCost = 20
@@ -86,6 +89,7 @@ Mage = function(ctx, x, y,team) {
   this.isSelected = false;
   this.isMoving = false;
   this.isAttacking = false;
+  this.isMagicking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
@@ -104,10 +108,13 @@ Ninja = function(ctx, x, y,team) {
   this.team = team;
   this.movementRange = 5;
   this.attackRange = 1;
+  this.magicRange = 2;
+  this.magicCost = 15;
+  this.isMagical = true;
   this.uid = uidGen();
   
   this.attackStrength = 16 //magic number 
-  
+ 
   this.hp = 45;
   this.maxHp = 45;
   this.mp = 20;
@@ -117,6 +124,7 @@ Ninja = function(ctx, x, y,team) {
   this.isSelected = false;
   this.isMoving = false;
   this.isAttacking = false;
+  this.isMagicking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
@@ -135,6 +143,8 @@ Cleric = function(ctx, x, y,team) {
   this.team = team;
   this.movementRange = 3;
   this.attackRange = 1;
+  this.magicRange = 1;
+  this.isMagical = true;
   this.uid = uidGen();
   
   this.attackStrength = 5
@@ -150,6 +160,7 @@ Cleric = function(ctx, x, y,team) {
   this.isSelected = false;
   this.isMoving = false;
   this.isAttacking = false;
+  this.isMagicking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);

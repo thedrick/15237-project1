@@ -35,10 +35,12 @@
   var actionMenuShowing;
   var characterIsMoving;
   var characterIsAttacking;
+  var characterIsMagicking;
   var characterIsWaiting;
   var currentActionItem;
   var neighbors;
   var attack;
+  var magic;
 
   // Load the tilesets
   var tileset;
@@ -53,6 +55,7 @@
   var drawMovementSquares;
   var containsattack;
   var drawAttackSquares;
+  var drawMagicSquares;
   var drawActionMenu;
   var drawStatusBox;
   var drawDirectionArrowUp;
@@ -79,6 +82,7 @@
   var handleCharacterWaiting;
   var handleCharacterMoving;
   var handleCharacterAttacking;
+  var handleCharacterMagicking;
   var handleCursorMovement;
   var keyboardHandler;
   
@@ -130,6 +134,7 @@
     currentActionItem = 0;
     neighbors = new Array();
     attack = new Array();
+	magic = new Array();
     
     tileset = new Image();
     tileset.src = "./resources/16tiles.png";
@@ -148,10 +153,12 @@
       actionMenuShowing = false;
       characterIsMoving = false;
       characterIsAttacking = false;
-      characterIsWaiting = false;
+      characterIsMagicking = false;
+	  characterIsWaiting = false;
       currentActionItem = 0;
       neighbors = [];
       attack = [];
+	  magic = [];
 	  
 	  var noMovesLeft = true;
 	  for (var i = 0; i < characterSet.length; i++) {
@@ -225,7 +232,7 @@
       characterSet.forEach(function(c) {
         if (c.isSelected) {
           if (actionMenuShowing) {
-            drawActionMenu(ctx, c);
+		    (c.isMagical) ? drawActionMagicMenu(ctx,c) : drawActionMenu(ctx, c);
           } else if (characterIsMoving) {
             drawMovementSquares(ctx, c.movementRange, c.x, c.y);
             for(var k=0; k<neighbors.length; k++){
@@ -238,6 +245,14 @@
 			 for(var k=0; k<attack.length; k++){
               var xcord = attack[k][0];
               var ycord = attack[k][1];
+              ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+            }
+          }
+		  else if (characterIsMagicking) {
+            drawMagicSquares(ctx, c.magicRange, c.x, c.y);
+			 for(var k=0; k<magic.length; k++){
+              var xcord = magic[k][0];
+              var ycord = magic[k][1];
               ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
             }
           }

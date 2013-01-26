@@ -74,6 +74,37 @@ drawTile = function(ctx, i, j) {
     ctx.drawImage(tileset, x*tileSize, y*tileSize, tileSize, tileSize, tileW*i, tileH*j, tileW, tileH);
 }
 
+
+
+drawActionMagicMenuArrow = function(ctx) {
+    var x = 20;
+    var y = 0;
+    switch (currentActionItem) {
+        case 0: // Move
+          y = canvas.height - 195;
+          break;
+        case 1: // Attack
+          y = canvas.height - 145;
+          break;
+		case 2: // Attack
+          y = canvas.height - 95;
+          break;
+        case 3: // Wait
+          y = canvas.height - 45;
+          break;
+        default:
+          y = canvas.height - 195;
+          break;
+    }
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.moveTo(x , y)
+    ctx.lineTo(x, y + 16);
+    ctx.lineTo(x + 16, y + 8);
+    ctx.closePath();
+    ctx.fill();
+}
+
 // Creates an arrow in the action menu.
 drawActionMenuArrow = function(ctx) {
     var x = 20;
@@ -166,6 +197,36 @@ drawAttackSquares = function(ctx, n, xLoc, yLoc) {
   }
 }
 
+containsmagic = function(x,y) {
+  for (var i = 0; i < magic.length; i++) {
+    var x1 = magic[i][0];
+    var y1 = magic[i][1]
+    if (x1 == x && y1 == y ) {
+      return true;
+  }
+}
+return false;
+}
+// Overlay a red square on tiles where the selected player is allowed to magically attack.
+drawMagicSquares = function(ctx, n, xLoc, yLoc) {
+  ctx.fillStyle = "rgba(173,20,0, 0.7)";
+  if (n === -1) {
+    return;
+    } else {
+      if(!containsmagic(xLoc, yLoc))
+      {
+        var coord = new Array(2);
+        coord[0] = xLoc;
+        coord[1] = yLoc;
+        magic.push(coord);
+      }  
+      drawMagicSquares(ctx, n-1, xLoc - 1, yLoc);
+      drawMagicSquares(ctx, n-1, xLoc + 1, yLoc);
+      drawMagicSquares(ctx, n-1, xLoc, yLoc + 1);
+      drawMagicSquares(ctx, n-1, xLoc, yLoc - 1);
+  }
+}
+
 // Draws the action menu and sets actionMenuShowing state to true. When this state is
 // true the player can only move the arrow in the menu and must make a selection or hit
 // ESC to exit the action menu.
@@ -205,6 +266,57 @@ drawActionMenu = function(ctx, c) {
   ctx.fillText("Attack", x, canvas.height - 80);
   ctx.fillText("Wait", x, canvas.height - 30);
   drawActionMenuArrow(ctx);
+  actionMenuShowing = true;
+}
+
+
+drawActionMagicMenu = function(ctx, c) {
+  if (currentActionItem === 0) {
+    if (!c.hasMoved) {
+      drawMovementSquares(ctx, c.movementRange, c.x, c.y);
+      for(var k=0; k<neighbors.length; k++){
+          var xcord = neighbors[k][0];
+          var ycord = neighbors[k][1];
+          ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+      }
+    }
+  } else if (currentActionItem === 1) {
+    if (!c.hasAttacked) {
+      drawAttackSquares(ctx, c.attackRange, c.x, c.y);
+      for(var k=0; k<attack.length; k++){
+          var xcord = attack[k][0];
+          var ycord = attack[k][1];
+          ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+      }
+	}
+  }
+  else if (currentActionItem === 2) {
+    if (!c.hasAttacked) {
+      drawMagicSquares(ctx, c.magicRange, c.x, c.y);
+      for(var k=0; k<magic.length; k++){
+          var xcord = magic[k][0];
+          var ycord = magic[k][1];
+          ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
+      }
+	}
+  }
+  characterSet.forEach(function(c) {
+    if (currentActionItem == 0) {
+      drawTile(ctx, c.x, c.y);
+    }
+    c.draw(ctx);
+  });
+  ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
+  ctx.fillRect(10, canvas.height - 210, 135, 200);
+  ctx.font = "24px Croissant One";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "center"
+  var x = 150 / 2 + 10;
+  ctx.fillText("Move", x, canvas.height - 180);
+  ctx.fillText("Attack", x, canvas.height - 130);
+  ctx.fillText("Magic", x, canvas.height - 80);
+  ctx.fillText("Wait", x, canvas.height - 30);
+  drawActionMagicMenuArrow(ctx);
   actionMenuShowing = true;
 }
 

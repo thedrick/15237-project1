@@ -29,40 +29,63 @@ killCharacter = function(c) {
 	}
 }
 
-//@TODO pmarino: allow for handleMagic within this function?
+
 // The player arg[0] attacked the player arg[1]
 handleAttack = function(cAttacking, cAttacked) {
 	currentHP = cAttacked.hp;
-	currentAttack = cAttacking.attackStrength; //maybe magicStrength wah
+	currentAttack = cAttacking.attackStrength; 
 	currentHP -= currentAttack;
-	cAttacked.hp = ((currentHP > cAttacked.maxHP) ? cAttacked.maxHP : currentHP);
-	console.log("wat");
+	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP);
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	} 
 	
 }
 
+handleMagic = function(cAttacking, cAttacked) {
+    currentHP = cAttacked.hp;
+	currentMagic = cAttacking.magicStrength; 
+	cAttacking.mp -= cAttacking.magicCost;
+	currentHP -= currentMagic;
+	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP);
+	if (currentHP <= 0) {
+		killCharacter(cAttacked);
+	}
+}	
+
 // The player selected something in the action menu, so let's handle that.
-madeActionSelection = function(c) {
+//note the bool refers to whether or not magic is possible.
+madeActionSelection = function(c, b) {
   switch (currentActionItem) {
     case 0:
 	  if (selectedCharacter.hasMoved) {
-        return;
+        break;
       }
       c.isMoving = true;
       characterIsMoving = true;
       break;
     case 1:
-	  if (selectedCharacter.hasMoved) {
-        return;
+	  if (selectedCharacter.hasAttacked) {
+        break;
       }
       c.isAttacking = true;
       characterIsAttacking = true;
       break;
     case 2:
-      characterIsWaiting = true;
-      break;
+	  if (!b) {
+		characterIsWaiting = true;
+		break;
+	  }
+	  else {
+	    if (selectedCharacter.hasAttacked) {
+          break;
+        }
+		characterIsMagicking = true;
+		break
+	  }
+	case 3:
+		characterIsWaiting = true;
+		break;
     default:
       break;
   }
@@ -71,19 +94,23 @@ madeActionSelection = function(c) {
 // The action menu is currently being displayed, so handle any 
 // subsequent events.
 handleActionMenu = function(e) {
+  var actionMin = 0;
+  var actionMax = ((actionMagicMenuShowing) ? 4 : 3);
+  
   switch (e.keyCode) {
     case 38:
-      if (currentActionItem > 0) currentActionItem--;
+      if (currentActionItem > actionMin) currentActionItem--;
       break;
     case 40:
-      if (currentActionItem < 2) currentActionItem++;
+      if (currentActionItem < actionMax) currentActionItem++;
       break;
     case 13:
       characterSet.forEach(function (c) {
         if (cursor.x === c.x && cursor.y === c.y) {
           actionMenuShowing = false;
+		  actionMagicMenuShowing = false
           c.isSelected = true;
-          madeActionSelection(c);
+          madeActionSelection(c, c.isMagical);
         }
       });
       break;
@@ -207,6 +234,45 @@ handleCharacterAttacking = function(e) {
   }
 };
 
+handleCharacterMagicking = function(e) {
+  var curX = cursor.x;
+  var curY = cursor.y;
+  switch(e.keyCode) {
+    case 37:
+      cursor.moveLeft();
+      break;
+    case 38:
+      cursor.moveUp();
+      break;
+    case 39:
+      cursor.moveRight();
+      break;
+    case 40:
+      cursor.moveDown();
+      break;
+    case 13:
+      // cannot attack yourself
+      if (curX === selectedCharacter.x && curY === selectedCharacter.y) 
+        return;
+      // there is someone there we can attack!
+      if (alreadyOccupied(curX, curY)) {
+        var attackedPlayer = characterAtLocation(curX, curY);
+        console.log(selectedCharacter.name + " magicked " + attackedPlayer.name);
+		handleMagic(selectedCharacter, attackedPlayer);
+        selectedCharacter.hasAttacked = true;
+        resetGameState();
+        return;
+      }
+      break;
+  }
+  var dist = Math.abs(cursor.x - selectedCharacter.x) + Math.abs(cursor.y - selectedCharacter.y);
+  if (dist > selectedCharacter.magicRange) {
+    cursor.x = curX;
+    cursor.y = curY;
+  }
+};
+
+
 // Allows the cursor to move around the game board. This is only called when we are not
 // moving, attacking, or selecting an action item.
 handleCursorMovement = function(e) {
@@ -232,7 +298,9 @@ handleCursorMovement = function(e) {
           }
           c.isSelected = true;
           actionMenuShowing = true;
+		  if (c.isMagical) actionMagicMenuShowing = true;
           selectedCharacter = c;
+		  console.log(selectedCharacter);
         }
       });
   }
@@ -251,6 +319,8 @@ keyboardHandler = function(e) {
     handleCharacterMoving(e);
   } else if (characterIsAttacking) {
     handleCharacterAttacking(e);
+  } else if (characterIsMagicking) {
+    handleCharacterMagicking(e);
   } else if (characterIsWaiting) {
     handleCharacterWaiting(e);
   } else {
