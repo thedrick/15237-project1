@@ -441,7 +441,7 @@ circle = function(ctx, cx, cy, radius) {
   ctx.arc(cx, cy, radius, 0, 2*Math.PI, true);
 }
 
-drawCharacterSide = function(ctx, x, y, team) {
+drawCharacterSide = function(ctx, x, y, team, b) {
   if (team === 1) {
 	ctx.fillStyle = "blue";
 	}
@@ -455,5 +455,5 @@ drawCharacterSide = function(ctx, x, y, team) {
   ctx.lineWidth = 1;
   ctx.beginPath();
   circle(ctx, tileW * (x + 1) - 6, tileH * y + 4, 3);
-  ctx.stroke();
+  if (b) ctx.stroke();
 }

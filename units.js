@@ -31,8 +31,10 @@ Archer = function(ctx, x, y, team) {
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 13, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
     if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-      drawCharacterSide(ctx, this.x, this.y, this.team);
-  }
+      drawCharacterSide(ctx, this.x, this.y, this.team, true);
+	else drawCharacterSide(ctx, this.x, this.y, this.team, false);
+  } 
+   
 }
 
 // Represents a Warrior unit in the game.
@@ -62,7 +64,8 @@ Warrior = function(ctx, x, y,team) {
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 1, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
     if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-      drawCharacterSide(ctx, this.x, this.y, this.team);
+      drawCharacterSide(ctx, this.x, this.y, this.team,true);
+	else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   }
 }
 
@@ -96,7 +99,8 @@ Mage = function(ctx, x, y,team) {
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 4, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
     if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-      drawCharacterSide(ctx, this.x, this.y, this.team);
+       drawCharacterSide(ctx, this.x, this.y, this.team,true);
+	else drawCharacterSide(ctx, this.x, this.y, this.team, false);  
   }
 }
 
@@ -132,7 +136,8 @@ Ninja = function(ctx, x, y,team) {
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 10, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
     if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-      drawCharacterSide(ctx, this.x, this.y, this.team);
+      drawCharacterSide(ctx, this.x, this.y, this.team,true);
+	else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   }
 }
 
@@ -168,6 +173,7 @@ Cleric = function(ctx, x, y,team) {
   this.draw = function(ctx) {
     ctx.drawImage(characters, charW * 7, charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
     if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-      drawCharacterSide(ctx, this.x, this.y, this.team);
+     drawCharacterSide(ctx, this.x, this.y, this.team,true);
+	else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   }
 }
