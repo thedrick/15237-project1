@@ -12,6 +12,7 @@
   <script>
   
   var currentPlayer;
+  var gameOver;
   
   // CONSTANTS 
   var canvas;
@@ -226,10 +227,10 @@
     characterSet.push(new Warrior(ctx, 3,4, 1));
     
 	characterSet.push(new Archer(ctx, 6,9, 2));
-    characterSet.push(new Cleric(ctx, 6,6, 2));
-    characterSet.push(new Ninja(ctx, 9,6, 2));
-    characterSet.push(new Mage(ctx, 3,12, 2));
-    characterSet.push(new Warrior(ctx, 9,12, 2));
+    //characterSet.push(new Cleric(ctx, 6,6, 2));
+    //characterSet.push(new Ninja(ctx, 9,6, 2));
+    //characterSet.push(new Mage(ctx, 3,12, 2));
+    //characterSet.push(new Warrior(ctx, 9,12, 2));
 	
     // The draw function to continually update the canvas with data.
     draw = function() {

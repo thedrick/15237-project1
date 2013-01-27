@@ -9,6 +9,7 @@ hasMP = function(c) {
 switchTurn = function() {
 	console.log("Switching now.");
 	for (var i=0; i < characterSet.length; i++) {
+		
 	    if (characterSet[i].isMagical) {
 		   characterSet[i].mp = ((characterSet[i].mp + 5 < characterSet[i].maxMp) ? characterSet[i].mp += 5 : characterSet[i].maxMp); 
 		}
@@ -17,6 +18,7 @@ switchTurn = function() {
 		characterSet[i].myTurn = !(characterSet[i].myTurn);
 	}
 	currentPlayer = ((currentPlayer === 1) ? 2 : 1);
+	
 }
 
 
@@ -24,15 +26,21 @@ killCharacter = function(c) {
 	var index = -1;
 	//var index = characterSet.indexOf(c); 
 	//maybe try something like this to be more efficient, but not necessary 
+    var gameOver = true;
+	var temp = characterSet[0].team;
 	for (var i=0; i < characterSet.length; i++) {
 		if (characterSet[i].uid === c.uid) {
 			index = i;
-			break;
-		}
+		} else if (characterSet[i].team !== temp) gameOver = false;
 	}
 	console.log(index);
 	if (index >= 0) {
 		characterSet.splice(index,1);
+	}
+	
+	if (gameOver) {
+		//@TODO: DISPLAY A WIN SCREEN!!!
+		characterSet = [];
 	}
 }
 
@@ -105,7 +113,7 @@ madeActionSelection = function(c, b) {
 // subsequent events.
 handleActionMenu = function(e) {
   var actionMin = 0;
-  var actionMax = ((actionMagicMenuShowing) ? 4 : 3);
+  var actionMax = ((actionMagicMenuShowing) ? 3 : 2);
   
   switch (e.keyCode) {
     case 38:
