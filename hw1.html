@@ -111,14 +111,15 @@
   <script src="gameDrawing.js" ></script>
   <script src="units.js"></script>
   <script src="eventHandlers.js"></script>
+  <script src="menu.js"></script>
   <script>
   window.onload = function() {
-    App();
+    Welcome();
   }
   
   App = function() {
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
+    //canvas = document.getElementById("canvas");
+    //ctx = canvas.getContext("2d");
     characterSet = [];
     // tile constants
     tileH = 40;
@@ -133,7 +134,7 @@
 
     // Global states that represent the current actions allowed or unallowed
     currentPlayer = 1;
-	selectedCharacter = null;
+	  selectedCharacter = null;
     actionMenuShowing = false;
     characterIsMoving = false;
     characterIsAttacking = false;
@@ -141,7 +142,7 @@
     currentActionItem = 0;
     neighbors = new Array();
     attack = new Array();
-	magic = new Array();
+	  magic = new Array();
     
     tileset = new Image();
     tileset.src = "./resources/16tiles.png";
