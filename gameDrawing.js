@@ -454,3 +454,13 @@ drawCharacterSide = function(ctx, x, y, team, b) {
   circle(ctx, tileW * (x + 1) - 6, tileH * y + 4, 3);
   if (b) ctx.stroke();
 }
+
+drawDamageMagic = function(ctx, x, y, amt) {
+	console.log("in the function");
+	ctx.font = "24px Croissant One";
+	ctx.textAlign = "center"
+	ctx.fillStyle = "red";
+	for (var i=0; i<100; i++)
+    	ctx.fillText("-" + amt, 40, 40);
+	
+}

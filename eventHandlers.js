@@ -53,7 +53,8 @@ handleAttack = function(cAttacking, cAttacked) {
 	currentHP = cAttacked.hp;
 	currentAttack = cAttacking.attackStrength; 
 	currentHP -= currentAttack;
-	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP);
+	//cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP); //unnecessary
+	cAttacked.showDamage(currentAttack);
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	} 
@@ -78,6 +79,7 @@ madeActionSelection = function(c, b) {
   switch (currentActionItem) {
     case 0:
 	  if (selectedCharacter.hasMoved) {
+	    resetGameState();
         break;
       }
       c.isMoving = true;
@@ -85,6 +87,7 @@ madeActionSelection = function(c, b) {
       break;
     case 1:
 	  if (selectedCharacter.hasAttacked) {
+	    resetGameState();
 	    currentActionItem = 0;
         break;
       }
@@ -99,6 +102,7 @@ madeActionSelection = function(c, b) {
 	  else {
 	    if (selectedCharacter.hasAttacked || (!hasMP(c))) {
 		  currentActionItem = 0;
+		  resetGameState();
           break;
         }
 		characterIsMagicking = true;
