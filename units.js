@@ -149,17 +149,17 @@ Archer = function(ctx, x, y,team) {
   this.x = x;
   this.y = y;
   this.team = team;
-  this.movementRange = 3;
+  this.movementRange = 4;
   this.attackRange = 1;
   this.uid = uidGen();
   
-  this.attackStrength = 26 //magic number 
+  this.attackStrength = 13 //magic number 
   this.isMagical = false;
-  this.hp = 75;
-  this.maxHp = 75;
+  this.hp = 50;
+  this.maxHp = 50;
   this.mp = 0;
   this.maxMp = 0;
-  this.name = "Warrior";
+  this.name = "Archer";
   this.direction = 2;
   this.isSelected = false;
   this.isMoving = false;
@@ -452,29 +452,33 @@ Warrior = function(ctx, x, y,team) {
 }
 
 Mage = function(ctx, x, y,team) {
-  this.x = x;
-  this.y = y;
-  this.team = team;
-  this.movementRange = 3;
-  this.attackRange = 1;
-  this.uid = uidGen();
-  
-  this.attackStrength = 26 //magic number 
-  this.isMagical = false;
-  this.hp = 75;
-  this.maxHp = 75;
-  this.mp = 0;
-  this.maxMp = 0;
-  this.name = "Warrior";
-  this.direction = 2;
-  this.isSelected = false;
-  this.isMoving = false;
-  this.isAttacking = false;
-  this.isMagicking = false;
-  this.hasMoved = false;
-  this.hasAttacked = false;
+
+this.team = team;
+   this.x = x;
+   this.y = y;
+   this.movementRange = 3;
+   this.attackRange = 1;
+   this.uid = uidGen();
+   this.isMagical = true;
+   this.magicRange = 2;
+   this.attackStrength = 12 //magic numbers
+   this.magicStrength = 30
+  this.magicCost = 40
+   
+   this.hp = 45;
+   this.maxHp = 45;
+   this.mp = 40;
+   this.maxMp = 40;
+   this.name = "Mage";
+   this.direction = 2;
+   this.isSelected = false;
+   this.isMoving = false;
+   this.isAttacking = false;
+   this.isMagicking = false;
+   this.hasMoved = false;
+   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
-  
+
   // The character should move this much 
   this.shouldMoveLeft = 0;
   this.shouldMoveUp = 0;
@@ -914,29 +918,34 @@ Mage = function(ctx, x, y,team) {
 //     }
 // }
 Ninja = function(ctx, x, y,team) {
+
   this.x = x;
   this.y = y;
   this.team = team;
-  this.movementRange = 3;
-  this.attackRange = 1;
-  this.uid = uidGen();
+  this.movementRange = 5;
+   this.attackRange = 1;
+   this.magicRange = 1;
+   this.magicCost = 15;
+   this.magicStrength = 20
+   this.isMagical = true;
+   this.uid = uidGen();
+   
+   this.attackStrength = 16 //magic number 
   
-  this.attackStrength = 26 //magic number 
-  this.isMagical = false;
-  this.hp = 75;
-  this.maxHp = 75;
-  this.mp = 0;
-  this.maxMp = 0;
-  this.name = "Warrior";
-  this.direction = 2;
-  this.isSelected = false;
-  this.isMoving = false;
-  this.isAttacking = false;
-  this.isMagicking = false;
-  this.hasMoved = false;
-  this.hasAttacked = false;
-  this.myTurn = ((team === currentPlayer) ? true : false);
-  
+   this.hp = 45;
+   this.maxHp = 45;
+   this.mp = 20;
+   this.maxMp = 20;
+   this.name = "Ninja";
+   this.direction = 2;
+   this.isSelected = false;
+   this.isMoving = false;
+   this.isAttacking = false;
+   this.isMagicking = false;
+   this.hasMoved = false;
+   this.hasAttacked = false;
+   this.myTurn = ((team === currentPlayer) ? true : false);
+ 
   // The character should move this much 
   this.shouldMoveLeft = 0;
   this.shouldMoveUp = 0;
@@ -1103,27 +1112,32 @@ Ninja = function(ctx, x, y,team) {
 // }
 Cleric = function(ctx, x, y,team) {
   this.x = x;
-  this.y = y;
-  this.team = team;
-  this.movementRange = 3;
-  this.attackRange = 1;
-  this.uid = uidGen();
-  
-  this.attackStrength = 26 //magic number 
-  this.isMagical = false;
-  this.hp = 75;
-  this.maxHp = 75;
-  this.mp = 0;
-  this.maxMp = 0;
-  this.name = "Warrior";
-  this.direction = 2;
-  this.isSelected = false;
-  this.isMoving = false;
-  this.isAttacking = false;
-  this.isMagicking = false;
-  this.hasMoved = false;
-  this.hasAttacked = false;
-  this.myTurn = ((team === currentPlayer) ? true : false);
+   this.y = y;
+   this.team = team;
+   this.movementRange = 3;
+   this.attackRange = 1;
+   this.magicRange = 1;
+   this.isMagical = true;
+   this.uid = uidGen();
+   
+   this.attackStrength = 5
+   this.magicStrength = -25 //magic number
+   this.magicCost = 20
+   
+   this.hp = 45;
+   this.maxHp = 45;
+   this.mp = 40;
+   this.maxMp = 40;
+   this.name = "Cleric";
+   this.direction = 2;
+   this.isSelected = false;
+   this.isMoving = false;
+   this.isAttacking = false;
+   this.isMagicking = false;
+   this.hasMoved = false;
+   this.hasAttacked = false;
+   this.myTurn = ((team === currentPlayer) ? true : false);
+ 
   
   // The character should move this much 
   this.shouldMoveLeft = 0;
