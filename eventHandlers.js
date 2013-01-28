@@ -201,8 +201,27 @@ handleCharacterMoving = function(e) {
       break;
     case 13:
       if (!alreadyOccupied(curX, curY)) {
-        selectedCharacter.x = cursor.x;
-        selectedCharacter.y = cursor.y;
+        var toMoveX = cursor.x - selectedCharacter.x;
+        var toMoveY = cursor.y - selectedCharacter.y;
+        var charachterToMove = selectedCharacter
+        while (toMoveX !== 0) {
+          if (toMoveX < 0) {
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveLeft = 10});
+            toMoveX++;
+          } else {
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveRight = 10});
+            toMoveX--;
+          }
+        }
+        while (toMoveY !== 0) {
+          if (toMoveY < 0) {
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveUp = 10});
+            toMoveY++;
+          } else {
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveDown = 10});
+            toMoveY--;
+          }
+        }
         selectedCharacter.hasMoved = true;
         resetGameState();
         return;

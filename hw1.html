@@ -8,7 +8,7 @@
   display: block;
 }
 </style>
-  <canvas id="canvas" width="1000", height="600", style="border:1px solid #000000"></canvas>
+  <canvas id="canvas" width="1000", height="600", style="border:5px solid #000000"></canvas>
   <script>
   
   var currentPlayer;
@@ -162,23 +162,23 @@
       characterIsMoving = false;
       characterIsAttacking = false;
       characterIsMagicking = false;
-	  characterIsWaiting = false;
+	    characterIsWaiting = false;
       currentActionItem = 0;
       neighbors = [];
       attack = [];
-	  magic = [];
+	    magic = [];
 	  
 	  var noMovesLeft = true;
 	  for (var i = 0; i < characterSet.length; i++) {
 		if (characterSet[i].myTurn && (!(characterSet[i].hasMoved && characterSet[i].hasAttacked))) {
-			console.log(!(characterSet[i].hasAttacked && characterSet[i].hasMoved));
-			noMovesLeft = false;
-			break;
-		}
+			  console.log(!(characterSet[i].hasAttacked && characterSet[i].hasMoved));
+			  noMovesLeft = false;
+			  break;
+		  }
 	  }
 	  if (noMovesLeft) {
-		switchTurn();
-	  }
+		    switchTurn();
+	    }
     }
     
     // white outline around squares which represents the player's cursor. This allows the player
@@ -227,11 +227,11 @@
     characterSet.push(new Mage(ctx, 1,4, 1));
     characterSet.push(new Warrior(ctx, 3,4, 1));
     
-	characterSet.push(new Archer(ctx, 6,9, 2));
-    //characterSet.push(new Cleric(ctx, 6,6, 2));
-    //characterSet.push(new Ninja(ctx, 9,6, 2));
-    //characterSet.push(new Mage(ctx, 3,12, 2));
-    //characterSet.push(new Warrior(ctx, 9,12, 2));
+	  characterSet.push(new Archer(ctx, 6,9, 2));
+    characterSet.push(new Cleric(ctx, 6,6, 2));
+    characterSet.push(new Ninja(ctx, 9,6, 2));
+    characterSet.push(new Mage(ctx, 3,12, 2));
+    characterSet.push(new Warrior(ctx, 9,12, 2));
 	
     // The draw function to continually update the canvas with data.
     draw = function() {
@@ -266,7 +266,6 @@
           }
           drawStatusBox(ctx, c);
         }
-        c.draw(ctx);
       });
       characterSet.forEach(function(c) {
         if (characterIsMoving) {
@@ -282,7 +281,7 @@
     }
     
     // draw at 30 FPS
-    setInterval(draw, 1000 / 30);
+    setInterval(draw, 1000 / 15);
   }
   </script>  
 </html>
