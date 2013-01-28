@@ -37,6 +37,7 @@ Archer = function(ctx, x, y,team) {
   this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
+  this.shouldSwitchCounter = 5;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
@@ -136,23 +137,27 @@ Archer = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-  switch(this.movePosition) {
-    case 0:
-      this.movePosition = 1;
-      break;
-    case 1:
-    if (this.shouldSwitch) {
-        this.movePosition = 2;
-      } else {
-        this.movePosition = 0
-      }
-      this.shouldSwitch = !this.shouldSwitch
-      break
-    default:
-      this.movePosition = 1;
-      break;
+  if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
+  else {
+    switch(this.movePosition) {
+      case 0:
+        this.movePosition = 1;
+        break;
+      case 1:
+      if (this.shouldSwitch) {
+          this.movePosition = 2;
+        } else {
+          this.movePosition = 0
+        }
+        this.shouldSwitch = !this.shouldSwitch
+        break
+      default:
+        this.movePosition = 1;
+        break;
+    }
+    this.shouldSwitchCounter = 5;
   }
-  }
+}
 }
 
 
@@ -190,6 +195,7 @@ Warrior = function(ctx, x, y,team) {
   this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
+  this.shouldSwitchCounter = 5;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
@@ -289,21 +295,25 @@ Warrior = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-  switch(this.movePosition) {
-    case 0:
-      this.movePosition = 1;
-      break;
-    case 1:
-    if (this.shouldSwitch) {
-        this.movePosition = 2;
-      } else {
-        this.movePosition = 0
-      }
-      this.shouldSwitch = !this.shouldSwitch
-      break
-    default:
-      this.movePosition = 1;
-      break;
+  if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
+  else {
+    switch(this.movePosition) {
+      case 0:
+        this.movePosition = 1;
+        break;
+      case 1:
+      if (this.shouldSwitch) {
+          this.movePosition = 2;
+        } else {
+          this.movePosition = 0
+        }
+        this.shouldSwitch = !this.shouldSwitch
+        break
+      default:
+        this.movePosition = 1;
+        break;
+    }
+    this.shouldSwitchCounter = 5;
   }
   }
 }
@@ -345,6 +355,7 @@ this.team = team;
   this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
+  this.shouldSwitchCounter = 5;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
@@ -444,21 +455,25 @@ this.team = team;
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-  switch(this.movePosition) {
-    case 0:
-      this.movePosition = 1;
-      break;
-    case 1:
-    if (this.shouldSwitch) {
-        this.movePosition = 2;
-      } else {
-        this.movePosition = 0
-      }
-      this.shouldSwitch = !this.shouldSwitch
-      break
-    default:
-      this.movePosition = 1;
-      break;
+  if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
+  else {
+    switch(this.movePosition) {
+      case 0:
+        this.movePosition = 1;
+        break;
+      case 1:
+      if (this.shouldSwitch) {
+          this.movePosition = 2;
+        } else {
+          this.movePosition = 0
+        }
+        this.shouldSwitch = !this.shouldSwitch
+        break
+      default:
+        this.movePosition = 1;
+        break;
+    }
+    this.shouldSwitchCounter = 5;
   }
   }
 }
@@ -501,6 +516,7 @@ Ninja = function(ctx, x, y,team) {
   this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
+  this.shouldSwitchCounter = 5;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
@@ -600,21 +616,25 @@ Ninja = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-  switch(this.movePosition) {
-    case 0:
-      this.movePosition = 1;
-      break;
-    case 1:
-    if (this.shouldSwitch) {
-        this.movePosition = 2;
-      } else {
-        this.movePosition = 0
-      }
-      this.shouldSwitch = !this.shouldSwitch
-      break
-    default:
-      this.movePosition = 1;
-      break;
+  if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
+  else {
+    switch(this.movePosition) {
+      case 0:
+        this.movePosition = 1;
+        break;
+      case 1:
+      if (this.shouldSwitch) {
+          this.movePosition = 2;
+        } else {
+          this.movePosition = 0
+        }
+        this.shouldSwitch = !this.shouldSwitch
+        break
+      default:
+        this.movePosition = 1;
+        break;
+    }
+    this.shouldSwitchCounter = 5;
   }
   }
 }
@@ -657,6 +677,7 @@ Cleric = function(ctx, x, y,team) {
   this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
+  this.shouldSwitchCounter = 5;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
@@ -756,21 +777,25 @@ Cleric = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-  switch(this.movePosition) {
-    case 0:
-      this.movePosition = 1;
-      break;
-    case 1:
-    if (this.shouldSwitch) {
-        this.movePosition = 2;
-      } else {
-        this.movePosition = 0
-      }
-      this.shouldSwitch = !this.shouldSwitch
-      break
-    default:
-      this.movePosition = 1;
-      break;
+  if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
+  else {
+    switch(this.movePosition) {
+      case 0:
+        this.movePosition = 1;
+        break;
+      case 1:
+      if (this.shouldSwitch) {
+          this.movePosition = 2;
+        } else {
+          this.movePosition = 0
+        }
+        this.shouldSwitch = !this.shouldSwitch
+        break
+      default:
+        this.movePosition = 1;
+        break;
+    }
+    this.shouldSwitchCounter = 5;
   }
   }
 }

@@ -1,7 +1,5 @@
 
 Welcome = function () {
-	canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
 
     var menu = new Image();
     var play = new Image();

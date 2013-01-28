@@ -1,5 +1,6 @@
 // SCRIPT 1 DRAWING CODE
-
+canvas = document.getElementById("canvas");
+  ctx = canvas.getContext("2d");
 grid = [['GG', 'GG', 'GG', 'RP', 'RP', 'GG', 'GG', 'PL', 'PB', 'PC', 'PC', 'PC', 'PR', 'GG', 'PL', 'DN', 'DN', 'PR', 'RP', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
         ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
         ['GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'RP', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
