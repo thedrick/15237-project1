@@ -153,6 +153,9 @@ Archer = function(ctx, x, y,team) {
       break;
   }
   }
+  
+  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+  
 }
 
 
@@ -306,11 +309,11 @@ Warrior = function(ctx, x, y,team) {
       break;
   }
   }
+  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
 }
 
 Mage = function(ctx, x, y,team) {
-
-this.team = team;
+   this.team = team;
    this.x = x;
    this.y = y;
    this.movementRange = 3;
@@ -461,14 +464,14 @@ this.team = team;
       break;
   }
   }
+  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
 }
 
 Ninja = function(ctx, x, y,team) {
-
-  this.x = x;
-  this.y = y;
-  this.team = team;
-  this.movementRange = 5;
+   this.x = x;
+   this.y = y;
+   this.team = team;
+   this.movementRange = 5;
    this.attackRange = 1;
    this.magicRange = 1;
    this.magicCost = 15;
@@ -617,10 +620,11 @@ Ninja = function(ctx, x, y,team) {
       break;
   }
   }
+  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
 }
 
 Cleric = function(ctx, x, y,team) {
-  this.x = x;
+   this.x = x;
    this.y = y;
    this.team = team;
    this.movementRange = 3;
@@ -773,4 +777,5 @@ Cleric = function(ctx, x, y,team) {
       break;
   }
   }
+  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
 }
