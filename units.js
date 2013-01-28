@@ -34,21 +34,21 @@ Archer = function(ctx, x, y,team) {
   this.shouldMoveRight = 0;
   this.shouldMoveDown = 0;
   this.movePosition = 1;
-  this.changeDirectionCounter = 20;
+  this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
     this.direction = 3;
-    this.x -= .05;
+    this.x -= .1;
     this.shouldMoveLeft--;
     if (this.shouldMoveLeft < 0) {
       this.shouldMoveLeft = 0;
     } else if (this.shouldMoveLeft === 0) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveLeft >= 10) {
+    } else if (this.shouldMoveLeft >= 5) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
@@ -57,14 +57,14 @@ Archer = function(ctx, x, y,team) {
   this.moveRight = function(ctx) {
     if (this.shouldMoveRight === 0) return;
     this.direction = 1;
-    this.x += .05;
+    this.x += .1;
     this.shouldMoveRight--;
     if (this.shouldMoveRight < 0) {
       this.shouldMoveRight = 0;
     } else if (this.shouldMoveRight === 0) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
@@ -73,14 +73,14 @@ Archer = function(ctx, x, y,team) {
   this.moveDown = function(ctx) {
     if (this.shouldMoveDown === 0) return;
     this.direction = 2;
-    this.y += .05;
+    this.y += .1;
     this.shouldMoveDown--;
     if (this.shouldMoveDown < 0) {
       this.shouldMoveDown = 0;
     } else if (this.shouldMoveDown === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
@@ -89,27 +89,26 @@ Archer = function(ctx, x, y,team) {
   this.moveUp = function(ctx) {
     if (this.shouldMoveUp === 0) return;
     this.direction = 0;
-    this.y -= .05;
+    this.y -= .1;
     this.shouldMoveUp--;
     if (this.shouldMoveUp < 0) {
       this.shouldMoveUp = 0;
     } else if (this.shouldMoveUp === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveUp >= 10) {
+    } else if (this.shouldMoveUp >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     }
   }
   this.setNewDirection = function() {
-    if (this.changeDirectionCounter === 20 && this.movementDirections.length !== 0) {
-      console.log(this.movementDirections)
+    if (this.changeDirectionCounter === 10 && this.movementDirections.length !== 0) {
       var newDirection = this.movementDirections.shift()
       newDirection();
       this.changeDirectionCounter--;
     } else if (this.changeDirectionCounter === 0) {
-      this.changeDirectionCounter = 20;
+      this.changeDirectionCounter = 10;
     } else {
       this.changeDirectionCounter--;
     }
@@ -188,21 +187,21 @@ Warrior = function(ctx, x, y,team) {
   this.shouldMoveRight = 0;
   this.shouldMoveDown = 0;
   this.movePosition = 1;
-  this.changeDirectionCounter = 20;
+  this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
     this.direction = 3;
-    this.x -= .05;
+    this.x -= .1;
     this.shouldMoveLeft--;
     if (this.shouldMoveLeft < 0) {
       this.shouldMoveLeft = 0;
     } else if (this.shouldMoveLeft === 0) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveLeft >= 10) {
+    } else if (this.shouldMoveLeft >= 5) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
@@ -211,14 +210,14 @@ Warrior = function(ctx, x, y,team) {
   this.moveRight = function(ctx) {
     if (this.shouldMoveRight === 0) return;
     this.direction = 1;
-    this.x += .05;
+    this.x += .1;
     this.shouldMoveRight--;
     if (this.shouldMoveRight < 0) {
       this.shouldMoveRight = 0;
     } else if (this.shouldMoveRight === 0) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
@@ -227,14 +226,14 @@ Warrior = function(ctx, x, y,team) {
   this.moveDown = function(ctx) {
     if (this.shouldMoveDown === 0) return;
     this.direction = 2;
-    this.y += .05;
+    this.y += .1;
     this.shouldMoveDown--;
     if (this.shouldMoveDown < 0) {
       this.shouldMoveDown = 0;
     } else if (this.shouldMoveDown === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
@@ -243,27 +242,26 @@ Warrior = function(ctx, x, y,team) {
   this.moveUp = function(ctx) {
     if (this.shouldMoveUp === 0) return;
     this.direction = 0;
-    this.y -= .05;
+    this.y -= .1;
     this.shouldMoveUp--;
     if (this.shouldMoveUp < 0) {
       this.shouldMoveUp = 0;
     } else if (this.shouldMoveUp === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveUp >= 10) {
+    } else if (this.shouldMoveUp >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     }
   }
   this.setNewDirection = function() {
-    if (this.changeDirectionCounter === 20 && this.movementDirections.length !== 0) {
-      console.log(this.movementDirections)
+    if (this.changeDirectionCounter === 10 && this.movementDirections.length !== 0) {
       var newDirection = this.movementDirections.shift()
       newDirection();
       this.changeDirectionCounter--;
     } else if (this.changeDirectionCounter === 0) {
-      this.changeDirectionCounter = 20;
+      this.changeDirectionCounter = 10;
     } else {
       this.changeDirectionCounter--;
     }
@@ -344,21 +342,21 @@ this.team = team;
   this.shouldMoveRight = 0;
   this.shouldMoveDown = 0;
   this.movePosition = 1;
-  this.changeDirectionCounter = 20;
+  this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
     this.direction = 3;
-    this.x -= .05;
+    this.x -= .1;
     this.shouldMoveLeft--;
     if (this.shouldMoveLeft < 0) {
       this.shouldMoveLeft = 0;
     } else if (this.shouldMoveLeft === 0) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveLeft >= 10) {
+    } else if (this.shouldMoveLeft >= 5) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
@@ -367,14 +365,14 @@ this.team = team;
   this.moveRight = function(ctx) {
     if (this.shouldMoveRight === 0) return;
     this.direction = 1;
-    this.x += .05;
+    this.x += .1;
     this.shouldMoveRight--;
     if (this.shouldMoveRight < 0) {
       this.shouldMoveRight = 0;
     } else if (this.shouldMoveRight === 0) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
@@ -383,14 +381,14 @@ this.team = team;
   this.moveDown = function(ctx) {
     if (this.shouldMoveDown === 0) return;
     this.direction = 2;
-    this.y += .05;
+    this.y += .1;
     this.shouldMoveDown--;
     if (this.shouldMoveDown < 0) {
       this.shouldMoveDown = 0;
     } else if (this.shouldMoveDown === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
@@ -399,27 +397,26 @@ this.team = team;
   this.moveUp = function(ctx) {
     if (this.shouldMoveUp === 0) return;
     this.direction = 0;
-    this.y -= .05;
+    this.y -= .1;
     this.shouldMoveUp--;
     if (this.shouldMoveUp < 0) {
       this.shouldMoveUp = 0;
     } else if (this.shouldMoveUp === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveUp >= 10) {
+    } else if (this.shouldMoveUp >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     }
   }
   this.setNewDirection = function() {
-    if (this.changeDirectionCounter === 20 && this.movementDirections.length !== 0) {
-      console.log(this.movementDirections)
+    if (this.changeDirectionCounter === 10 && this.movementDirections.length !== 0) {
       var newDirection = this.movementDirections.shift()
       newDirection();
       this.changeDirectionCounter--;
     } else if (this.changeDirectionCounter === 0) {
-      this.changeDirectionCounter = 20;
+      this.changeDirectionCounter = 10;
     } else {
       this.changeDirectionCounter--;
     }
@@ -501,21 +498,21 @@ Ninja = function(ctx, x, y,team) {
   this.shouldMoveRight = 0;
   this.shouldMoveDown = 0;
   this.movePosition = 1;
-  this.changeDirectionCounter = 20;
+  this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
     this.direction = 3;
-    this.x -= .05;
+    this.x -= .1;
     this.shouldMoveLeft--;
     if (this.shouldMoveLeft < 0) {
       this.shouldMoveLeft = 0;
     } else if (this.shouldMoveLeft === 0) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveLeft >= 10) {
+    } else if (this.shouldMoveLeft >= 5) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
@@ -524,14 +521,14 @@ Ninja = function(ctx, x, y,team) {
   this.moveRight = function(ctx) {
     if (this.shouldMoveRight === 0) return;
     this.direction = 1;
-    this.x += .05;
+    this.x += .1;
     this.shouldMoveRight--;
     if (this.shouldMoveRight < 0) {
       this.shouldMoveRight = 0;
     } else if (this.shouldMoveRight === 0) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
@@ -540,14 +537,14 @@ Ninja = function(ctx, x, y,team) {
   this.moveDown = function(ctx) {
     if (this.shouldMoveDown === 0) return;
     this.direction = 2;
-    this.y += .05;
+    this.y += .1;
     this.shouldMoveDown--;
     if (this.shouldMoveDown < 0) {
       this.shouldMoveDown = 0;
     } else if (this.shouldMoveDown === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
@@ -556,27 +553,26 @@ Ninja = function(ctx, x, y,team) {
   this.moveUp = function(ctx) {
     if (this.shouldMoveUp === 0) return;
     this.direction = 0;
-    this.y -= .05;
+    this.y -= .1;
     this.shouldMoveUp--;
     if (this.shouldMoveUp < 0) {
       this.shouldMoveUp = 0;
     } else if (this.shouldMoveUp === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveUp >= 10) {
+    } else if (this.shouldMoveUp >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     }
   }
   this.setNewDirection = function() {
-    if (this.changeDirectionCounter === 20 && this.movementDirections.length !== 0) {
-      console.log(this.movementDirections)
+    if (this.changeDirectionCounter === 10 && this.movementDirections.length !== 0) {
       var newDirection = this.movementDirections.shift()
       newDirection();
       this.changeDirectionCounter--;
     } else if (this.changeDirectionCounter === 0) {
-      this.changeDirectionCounter = 20;
+      this.changeDirectionCounter = 10;
     } else {
       this.changeDirectionCounter--;
     }
@@ -658,21 +654,21 @@ Cleric = function(ctx, x, y,team) {
   this.shouldMoveRight = 0;
   this.shouldMoveDown = 0;
   this.movePosition = 1;
-  this.changeDirectionCounter = 20;
+  this.changeDirectionCounter = 10;
   this.movementDirections = [];
   this.shouldSwitch = false;
   
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
     this.direction = 3;
-    this.x -= .05;
+    this.x -= .1;
     this.shouldMoveLeft--;
     if (this.shouldMoveLeft < 0) {
       this.shouldMoveLeft = 0;
     } else if (this.shouldMoveLeft === 0) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveLeft >= 10) {
+    } else if (this.shouldMoveLeft >= 5) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
@@ -681,14 +677,14 @@ Cleric = function(ctx, x, y,team) {
   this.moveRight = function(ctx) {
     if (this.shouldMoveRight === 0) return;
     this.direction = 1;
-    this.x += .05;
+    this.x += .1;
     this.shouldMoveRight--;
     if (this.shouldMoveRight < 0) {
       this.shouldMoveRight = 0;
     } else if (this.shouldMoveRight === 0) {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
       this.x = Math.round(this.x);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
     } else {
       drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
@@ -697,14 +693,14 @@ Cleric = function(ctx, x, y,team) {
   this.moveDown = function(ctx) {
     if (this.shouldMoveDown === 0) return;
     this.direction = 2;
-    this.y += .05;
+    this.y += .1;
     this.shouldMoveDown--;
     if (this.shouldMoveDown < 0) {
       this.shouldMoveDown = 0;
     } else if (this.shouldMoveDown === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveRight >= 10) {
+    } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
@@ -713,27 +709,26 @@ Cleric = function(ctx, x, y,team) {
   this.moveUp = function(ctx) {
     if (this.shouldMoveUp === 0) return;
     this.direction = 0;
-    this.y -= .05;
+    this.y -= .1;
     this.shouldMoveUp--;
     if (this.shouldMoveUp < 0) {
       this.shouldMoveUp = 0;
     } else if (this.shouldMoveUp === 0) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
       this.y = Math.round(this.y);
-    } else if (this.shouldMoveUp >= 10) {
+    } else if (this.shouldMoveUp >= 5) {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) - 1);
     } else {
       drawTile(ctx, Math.round(this.x), Math.round(this.y) + 1);
     }
   }
   this.setNewDirection = function() {
-    if (this.changeDirectionCounter === 20 && this.movementDirections.length !== 0) {
-      console.log(this.movementDirections)
+    if (this.changeDirectionCounter === 10 && this.movementDirections.length !== 0) {
       var newDirection = this.movementDirections.shift()
       newDirection();
       this.changeDirectionCounter--;
     } else if (this.changeDirectionCounter === 0) {
-      this.changeDirectionCounter = 20;
+      this.changeDirectionCounter = 10;
     } else {
       this.changeDirectionCounter--;
     }

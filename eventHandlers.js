@@ -206,19 +206,19 @@ handleCharacterMoving = function(e) {
         var charachterToMove = selectedCharacter
         while (toMoveX !== 0) {
           if (toMoveX < 0) {
-            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveLeft = 20});
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveLeft = 10});
             toMoveX++;
           } else {
-            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveRight = 20});
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveRight = 10});
             toMoveX--;
           }
         }
         while (toMoveY !== 0) {
           if (toMoveY < 0) {
-            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveUp = 20});
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveUp = 10});
             toMoveY++;
           } else {
-            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveDown = 20});
+            selectedCharacter.movementDirections.push(function() {charachterToMove.shouldMoveDown = 10});
             toMoveY--;
           }
         }

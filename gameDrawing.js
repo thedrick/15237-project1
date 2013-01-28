@@ -252,7 +252,6 @@ drawActionMenu = function(ctx, c) {
     if (currentActionItem == 0) {
       drawTile(ctx, c.x, c.y);
     }
-    c.draw(ctx);
   });
   ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
   ctx.fillRect(10, canvas.height - 160, 135, 150);
@@ -302,7 +301,6 @@ drawActionMagicMenu = function(ctx, c) {
     if (currentActionItem == 0) {
       drawTile(ctx, c.x, c.y);
     }
-    c.draw(ctx);
   });
   ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
   ctx.fillRect(10, canvas.height - 210, 135, 200);
