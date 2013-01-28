@@ -28,6 +28,7 @@ killCharacter = function(c) {
 	//maybe try something like this to be more efficient, but not necessary 
     var gameOver = true;
 	var temp = characterSet[0].team;
+	
 	for (var i=0; i < characterSet.length; i++) {
 		if (characterSet[i].uid === c.uid) {
 			index = i;
@@ -37,6 +38,8 @@ killCharacter = function(c) {
 	if (index >= 0) {
 		characterSet.splice(index,1);
 	}
+	
+	if (characterSet.length === 1) gameOver = true;
 	
 	if (gameOver) {
 		//@TODO: DISPLAY A WIN SCREEN!!!
