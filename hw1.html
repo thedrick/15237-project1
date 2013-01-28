@@ -267,9 +267,6 @@
         }
       });
       characterSet.forEach(function(c) {
-        if (characterIsMoving) {
-          drawTile(ctx, c.x, c.y);
-        }
         c.draw(ctx);
       });
       if (characterIsWaiting) {
