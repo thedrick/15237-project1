@@ -324,7 +324,7 @@ Warrior = function(ctx, x, y,team) {
   this.myTurn = ((team === currentPlayer) ? true : false);
   
   // The character should move this much 
-  this.shouldMoveLeft = 20;
+  this.shouldMoveLeft = 0;
   this.shouldMoveUp = 0;
   this.shouldMoveRight = 0;
   this.shouldMoveDown = 0;
