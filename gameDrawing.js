@@ -86,7 +86,7 @@ drawActionMagicMenuArrow = function(ctx) {
         case 1: // Attack
           y = canvas.height - 145;
           break;
-		case 2: // Attack
+		    case 2: // Attack
           y = canvas.height - 95;
           break;
         case 3: // Wait
@@ -151,8 +151,7 @@ drawMovementSquares = function(ctx, n, xLoc, yLoc) {
   if (n === -1) {
     return;
   } else {
-      if(!containsmovement(xLoc, yLoc))
-      {
+      if(!containsmovement(xLoc, yLoc)) {
         var coord = new Array(2);
         coord[0] = xLoc;
         coord[1] = yLoc;
@@ -183,8 +182,7 @@ drawAttackSquares = function(ctx, n, xLoc, yLoc) {
   if (n === -1) {
     return;
     } else {
-      if(!containsattack(xLoc, yLoc))
-      {
+      if(!containsattack(xLoc, yLoc)) {
         var coord = new Array(2);
         coord[0] = xLoc;
         coord[1] = yLoc;

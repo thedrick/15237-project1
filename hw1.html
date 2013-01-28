@@ -8,7 +8,7 @@
   display: block;
 }
 </style>
-  <canvas id="canvas" width="1000", height="600", style="border:1px solid #000000"></canvas>
+  <canvas id="canvas" width="1000", height="600", style="border:5px solid #000000"></canvas>
   <script>
   
   var currentPlayer;
@@ -133,7 +133,7 @@
 
     // Global states that represent the current actions allowed or unallowed
     currentPlayer = 1;
-	selectedCharacter = null;
+	  selectedCharacter = null;
     actionMenuShowing = false;
     characterIsMoving = false;
     characterIsAttacking = false;
@@ -141,7 +141,7 @@
     currentActionItem = 0;
     neighbors = new Array();
     attack = new Array();
-	magic = new Array();
+	  magic = new Array();
     
     tileset = new Image();
     tileset.src = "./resources/16tiles.png";
@@ -161,23 +161,23 @@
       characterIsMoving = false;
       characterIsAttacking = false;
       characterIsMagicking = false;
-	  characterIsWaiting = false;
+	    characterIsWaiting = false;
       currentActionItem = 0;
       neighbors = [];
       attack = [];
-	  magic = [];
+	    magic = [];
 	  
 	  var noMovesLeft = true;
 	  for (var i = 0; i < characterSet.length; i++) {
 		if (characterSet[i].myTurn && (!(characterSet[i].hasMoved && characterSet[i].hasAttacked))) {
-			console.log(!(characterSet[i].hasAttacked && characterSet[i].hasMoved));
-			noMovesLeft = false;
-			break;
-		}
+			  console.log(!(characterSet[i].hasAttacked && characterSet[i].hasMoved));
+			  noMovesLeft = false;
+			  break;
+		  }
 	  }
 	  if (noMovesLeft) {
-		switchTurn();
-	  }
+		    switchTurn();
+	    }
     }
     
     // white outline around squares which represents the player's cursor. This allows the player
@@ -220,13 +220,17 @@
     canvas.focus();
     
     // populate the board with some starting units.
-    characterSet.push(new Archer(ctx, 2,3, 1));
+    var a1 = new Archer(ctx, 2,3, 1);
+    a1.movementDirections = [function() {a1.shouldMoveLeft = 20;}];
+    characterSet.push(a1);
     characterSet.push(new Cleric(ctx, 2,2, 1));
     characterSet.push(new Ninja(ctx, 3,2, 1));
     characterSet.push(new Mage(ctx, 1,4, 1));
-    characterSet.push(new Warrior(ctx, 3,4, 1));
+    var w1 = new Warrior(ctx, 3,4, 1);
+    w1.movementDirections = [function() {w1.shouldMoveRight = 20}];
+    characterSet.push(w1);
     
-	characterSet.push(new Archer(ctx, 6,9, 2));
+	  characterSet.push(new Archer(ctx, 6,9, 2));
     //characterSet.push(new Cleric(ctx, 6,6, 2));
     //characterSet.push(new Ninja(ctx, 9,6, 2));
     //characterSet.push(new Mage(ctx, 3,12, 2));
@@ -281,7 +285,7 @@
     }
     
     // draw at 30 FPS
-    setInterval(draw, 1000 / 30);
+    setInterval(draw, 1000 / 15);
   }
   </script>  
 </html>
