@@ -111,14 +111,15 @@
   <script src="gameDrawing.js" ></script>
   <script src="units.js"></script>
   <script src="eventHandlers.js"></script>
+  <script src="menu.js"></script>
   <script>
   window.onload = function() {
-    App();
+    Welcome();
   }
   
   App = function() {
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d");
+    //canvas = document.getElementById("canvas");
+    //ctx = canvas.getContext("2d");
     characterSet = [];
     // tile constants
     tileH = 40;
