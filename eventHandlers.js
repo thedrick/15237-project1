@@ -1,37 +1,43 @@
+/* 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ */
+
 // SCRIPT 3 - event handlers
 
-//@TODO pmarino: maybe we should start passing around uids instead of characters to functions here.
-
+//a function to randomize damage a little, as in DnD
 dnd = function(z) {
 	var r = ((Math.floor(Math.random() * 4)) / 10);
 	console.log("dnd!" + r);
 	return (Math.round(z*(1.2 - r)));
 }
 
+//hasMP just checks to see if the unit has enough MP to cast a spell.
 hasMP = function(c) {
 	return (c.mp >= c.magicCost);
 }
 
+
+//switchTurn changes currentPlayer and then allows all units on that team to move. 
+//also handles incremental magic increase.
 switchTurn = function() {
 	console.log("Switching now.");
 	for (var i=0; i < characterSet.length; i++) {
-		
-	    if (characterSet[i].isMagical) {
+	    if (characterSet[i].isMagical) { //if magical, add some MP
 		   characterSet[i].mp = ((characterSet[i].mp + 5 < characterSet[i].maxMp) ? characterSet[i].mp += 5 : characterSet[i].maxMp); 
 		}
-		characterSet[i].hasMoved = false;
+		characterSet[i].hasMoved = false; //set flags for turn movement & attack to false
 		characterSet[i].hasAttacked = false;
-		characterSet[i].myTurn = !(characterSet[i].myTurn);
+		characterSet[i].myTurn = !(characterSet[i].myTurn); //negate turn
 	}
-	currentPlayer = ((currentPlayer === 1) ? 2 : 1);
+	currentPlayer = ((currentPlayer === 1) ? 2 : 1); //switch turn global
 	
 }
 
-
+//handles unit death by removing from charSet.
+//also does gameOver check
 killCharacter = function(c) {
 	var index = -1;
-	//var index = characterSet.indexOf(c); 
-	//maybe try something like this to be more efficient, but not necessary 
     var gameOver = true;
 	var temp = characterSet[0].team;
 	
@@ -63,32 +69,60 @@ killCharacter = function(c) {
 	}
 }
 
-
+//handles damage dealing and attacking directions
 // The player arg[0] attacked the player arg[1]
 handleAttack = function(cAttacking, cAttacked) {
+	//calculate damage to deal, newHp, set variables to animate
 	currentHP = cAttacked.hp;
 	currentAttack = dnd(cAttacking.attackStrength); 
 	currentHP -= currentAttack;
 	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP); 
 	cAttacked.damageDisplayCounter = 20;
 	cAttacked.damageDisplayAmount = currentAttack;
-	//cAttacked.showDamage(currentAttack);
+	//if out of health, kill
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	} 
-	
+	//set directions
+	var cx = cAttacked.x - cAttacking.x;
+	var cy = cAttacked.y - cAttacking.y;
+	if (cx === 0 || (Math.abs(cy) > Math.abs(cx))) {
+	  if (cy < 0) 
+	    cAttacking.direction = 0;
+	  else
+	    cAttacking.direction = 2;
+	} else {
+	  if (cx < 0)
+	    cAttacking.direction = 3;
+	  else
+	    cAttacking.direction = 1;
+	}
 }
 
+//same as handleDamage but works for magic attacks instead
 handleMagic = function(cAttacking, cAttacked) {
     currentHP = cAttacked.hp;
 	currentMagic = dnd(cAttacking.magicStrength); 
 	cAttacking.mp -= cAttacking.magicCost;
-	currentHP -= currentMagic;
+	currentHP -= currentMagic; 
 	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP);
     cAttacked.damageDisplayCounter = 20;
 	cAttacked.damageDisplayAmount = currentMagic;
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
+	}
+	var cx = cAttacked.x - cAttacking.x;
+	var cy = cAttacked.y - cAttacking.y;
+	if (cx === 0 || (Math.abs(cy) > Math.abs(cx))) {
+	  if (cy < 0) 
+	    cAttacking.direction = 0;
+	  else
+	    cAttacking.direction = 2;
+	} else {
+	  if (cx < 0)
+	    cAttacking.direction = 3;
+	  else
+	    cAttacking.direction = 1;
 	}
 }	
 
@@ -173,6 +207,7 @@ characterAtLocation = function(xLoc, yLoc) {
   return charAtLoc;
 }
 
+//if characterWaiting, change direction
 handleCharacterWaiting = function(e) {
   switch(e.keyCode) {
     case 37:
@@ -193,6 +228,26 @@ handleCharacterWaiting = function(e) {
       resetGameState();
       break;
   }
+}
+
+//check if a character can attack anyone. If they can't, then autowait!
+characterCanAttack = function(cx, cy) {
+  if (selectedCharacter === null) return false;
+  if (selectedCharacter.name === "Cleric") return true;
+  var canAttackSomeone = false;
+  characterSet.forEach(function(c) {
+    var cDist = Math.abs(cx - c.x) + Math.abs(cy - c.y);
+    if (c === selectedCharacter) {
+      cDist = 50;
+    }
+    if (cDist <= selectedCharacter.attackRange) {
+      canAttackSomeone = true;
+    }
+    if (selectedCharacter.isMagical && cDist <= selectedCharacter.magicRange) {
+      canAttackSomeone = true;
+    }
+  });
+  return canAttackSomeone;
 }
 
 // The characterIsMoving game state is active, so lets handle movement.
@@ -237,6 +292,9 @@ handleCharacterMoving = function(e) {
         }
         console.log("finished the while loops");
         selectedCharacter.hasMoved = true;
+        if (!characterCanAttack(cursor.x, cursor.y)) {
+          selectedCharacter.hasAttacked = true;
+        }
         resetGameState();
         return;
       }
@@ -274,7 +332,7 @@ handleCharacterAttacking = function(e) {
       if (alreadyOccupied(curX, curY)) {
         var attackedPlayer = characterAtLocation(curX, curY);
         console.log(selectedCharacter.name + " attacked " + attackedPlayer.name);
-		handleAttack(selectedCharacter, attackedPlayer);
+		    handleAttack(selectedCharacter, attackedPlayer);
         selectedCharacter.hasAttacked = true;
         resetGameState();
         return;

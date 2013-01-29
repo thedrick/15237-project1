@@ -1,3 +1,8 @@
+<!-- 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ -->
+
 <html>
 <title> 15-237 Project 1 </title>
 <head> <link href='http://fonts.googleapis.com/css?family=Croissant+One' rel='stylesheet' type='text/css'> </head>
@@ -10,7 +15,6 @@
 </style>
   <canvas id="canvas" width="1000", height="600", style="border:5px solid #000000"></canvas>
   <script>
-  
   var currentPlayer;
   var gameOver;
   
@@ -20,6 +24,8 @@
   var cursor;
   var characterSet;
 
+  var Tutorial;
+  
   // tile constants
   var tileH;
   var tileW;
@@ -71,6 +77,7 @@
   var circle;
   var drawCharacterSide;
   var drawDamageMagic;
+  var characterCanAttack;
   
   // units code located in units.js
   var Archer;
@@ -116,6 +123,7 @@
   <script src="units.js"></script>
   <script src="eventHandlers.js"></script>
   <script src="menu.js"></script>
+  <script src="tutorial.js"></script>
   <script>
   window.onload = function() {
    Welcome();
@@ -125,16 +133,6 @@
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     characterSet = [];
-    // tile constants
-    tileH = 40;
-    tileW = 40;
-    tileSize = 16;
-
-    // characters constants
-    charH = 36;
-    charW = 32;
-    charWoffset = 3;
-    charHoffset = 2;
 
     // Global states that represent the current actions allowed or unallowed
     currentPlayer = 1;
@@ -147,14 +145,6 @@
     neighbors = new Array();
     attack = new Array();
 	  magic = new Array();
-    
-    tileset = new Image();
-    tileset.src = "./resources/16tiles.png";
-    tileset.onload = function() {
-        loadmap(ctx);
-    };
-    characters = new Image();
-    characters.src = "./resources/characters.png";
     
     resetCharacters = function() {
       characterSet.forEach(function (c){

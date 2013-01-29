@@ -1,6 +1,30 @@
+/* 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ */
+ 
+ 
+ //does all the drawing.
+
 // SCRIPT 1 DRAWING CODE
 canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
+  tileset = new Image();
+  tileset.src = "./resources/16tiles.png";
+  characters = new Image();
+  characters.src = "./resources/characters.png";
+  
+  // tile constants
+  tileH = 40;
+  tileW = 40;
+  tileSize = 16;
+
+  // characters constants
+  charH = 36;
+  charW = 32;
+  charWoffset = 3;
+  charHoffset = 2;
+  
 grid = [['GG', 'GG', 'GG', 'RP', 'RP', 'GG', 'GG', 'PL', 'PB', 'PC', 'PC', 'PC', 'PR', 'GG', 'PL', 'DN', 'DN', 'PR', 'RP', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
         ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
         ['GG', 'GG', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'RP', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
@@ -13,9 +37,9 @@ grid = [['GG', 'GG', 'GG', 'RP', 'RP', 'GG', 'GG', 'PL', 'PB', 'PC', 'PC', 'PC',
         ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'BG', 'TG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG'],
         ['GG', 'TG', 'GG', 'TG', 'GG', 'GG', 'GG', 'BG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG', 'GG', 'GG', 'GG'],
         ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-        ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-        ['TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-        ['TG', 'TG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
+        ['GG', 'GG', 'GG', 'GG', 'SF', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+        ['TG', 'BG', 'GG', 'GG', 'SF', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+        ['TG', 'TG', 'GG', 'LF', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
         
 // draw the tile at i,j from the gameboard grid.
 drawTile = function(ctx, i, j) {
@@ -86,6 +110,7 @@ alreadyOccupied = function(newX, newY) {
   return isOccupied;
 }
 
+//draw arrow on the action menu that has magic option.
 drawActionMagicMenuArrow = function(ctx) {
     var x = 20;
     var y = 0;
@@ -209,7 +234,6 @@ drawAttackSquares = function(ctx, n, xLoc, yLoc) {
       attackingCharacter.isBeingAttacked = true;
     }
   });
-
 }
 
 containsmagic = function(x,y) {
