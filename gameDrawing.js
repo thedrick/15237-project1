@@ -491,7 +491,17 @@ drawDamageMagic = function(ctx, x, y, amt, count) {
 	console.log("in the function");
 	ctx.font = "18px Croissant One";
 	ctx.textAlign = "center"
+	if (amt >= 0) {
+	ctx.fillStyle = "black";
+	ctx.fillText("-" + amt, x*tileW + 4*tileW/10 - 0.5, y*tileH - (20 - count) + 0.5);
 	ctx.fillStyle = "red";
 	ctx.fillText("-" + amt, x*tileW + 4*tileW/10, y*tileH - (20 - count));
+	}
+	else {
+	ctx.fillStyle = "white";
+	ctx.fillText("+" + Math.abs(amt), x*tileW + 4*tileW/10 - 0.5, y*tileH - (20 - count) + 0.5);
+	ctx.fillStyle = "blue";
+	ctx.fillText("+" + Math.abs(amt), x*tileW + 4*tileW/10, y*tileH - (20 - count));
+	}
 	
 }

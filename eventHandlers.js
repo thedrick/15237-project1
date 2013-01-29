@@ -53,7 +53,7 @@ handleAttack = function(cAttacking, cAttacked) {
 	currentHP = cAttacked.hp;
 	currentAttack = cAttacking.attackStrength; 
 	currentHP -= currentAttack;
-	//cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP); //unnecessary
+	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP); 
 	cAttacked.damageDisplayCounter = 20;
 	cAttacked.damageDisplayAmount = currentAttack;
 	//cAttacked.showDamage(currentAttack);
@@ -69,7 +69,8 @@ handleMagic = function(cAttacking, cAttacked) {
 	cAttacking.mp -= cAttacking.magicCost;
 	currentHP -= currentMagic;
 	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP);
-	console.log(currentHP);
+    cAttacked.damageDisplayCounter = 20;
+	cAttacked.damageDisplayAmount = currentMagic;
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	}
