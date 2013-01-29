@@ -342,7 +342,7 @@ Warrior = function(ctx, x, y,team) {
     ctx.fillStyle = "rgba(173,20,0, 0.7)"
     ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
   } else {
-    drawTile(ctx, this.x, this.y);
+    drawTile(ctx, Math.round(this.x), Math.round(this.y));
   }
   ctx.drawImage(characters, charW * this.movePosition, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
