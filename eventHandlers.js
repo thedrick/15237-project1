@@ -219,6 +219,7 @@ handleCharacterMoving = function(e) {
             toMoveY--;
           }
         }
+        console.log("finished the while loops");
         selectedCharacter.hasMoved = true;
         resetGameState();
         return;

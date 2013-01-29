@@ -235,17 +235,17 @@
     canvas.focus();
     
     // populate the board with some starting units.
-    characterSet.push(new Archer(ctx, 2,3, 1));
-    characterSet.push(new Cleric(ctx, 2,2, 1));
-    characterSet.push(new Ninja(ctx, 3,2, 1));
-    characterSet.push(new Mage(ctx, 1,4, 1));
-    characterSet.push(new Warrior(ctx, 3,4, 1));
+    characterSet.push(new Archer(ctx, 1,2, 1));
+    characterSet.push(new Cleric(ctx, 1,1, 1));
+    characterSet.push(new Ninja(ctx, 2,2, 1));
+    characterSet.push(new Mage(ctx, 1,3, 1));
+    characterSet.push(new Warrior(ctx, 3,1,1));
     
-	  characterSet.push(new Archer(ctx, 6,9, 2));
-    characterSet.push(new Cleric(ctx, 6,6, 2));
-    characterSet.push(new Ninja(ctx, 9,6, 2));
-    characterSet.push(new Mage(ctx, 3,12, 2));
-    characterSet.push(new Warrior(ctx, 9,12, 2));
+	  characterSet.push(new Archer(ctx, 20,13, 2));
+    characterSet.push(new Cleric(ctx, 21,13, 2));
+    characterSet.push(new Ninja(ctx,20,12, 2));
+    characterSet.push(new Mage(ctx, 22,12, 2));
+    characterSet.push(new Warrior(ctx, 20,11, 2));
 	
     // The draw function to continually update the canvas with data.
     draw = function() {
@@ -278,7 +278,6 @@
               ctx.fillRect(tileW*xcord, tileH*ycord, 37,37);
             }
           }
-          drawStatusBox(ctx, c);
         }
       });
       characterSet.forEach(function(c) {
@@ -291,6 +290,8 @@
       }
       characterSet.forEach(function(c) {
         c.shouldDrawDamage(ctx);
+        if (cursor.x === c.x && cursor.y === c.y)
+          drawStatusBox(ctx, c);
       });
     }
     

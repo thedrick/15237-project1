@@ -273,7 +273,7 @@ drawActionMenu = function(ctx, c) {
   }
   characterSet.forEach(function(c) {
     if (currentActionItem == 0) {
-      drawTile(ctx, c.x, c.y);
+      drawTile(ctx, Math.round(c.x), Math.round(c.y));
     }
   });
   ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
@@ -322,7 +322,7 @@ drawActionMagicMenu = function(ctx, c) {
   }
   characterSet.forEach(function(c) {
     if (currentActionItem == 0) {
-      drawTile(ctx, c.x, c.y);
+      drawTile(ctx, Math.round(c.x), Math.round(c.y));
     }
   });
   ctx.fillStyle = "rgba(217, 150, 35, 0.6)";
