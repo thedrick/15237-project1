@@ -2,6 +2,12 @@
 
 //@TODO pmarino: maybe we should start passing around uids instead of characters to functions here.
 
+dnd = function(z) {
+	var r = ((Math.floor(Math.random() * 4)) / 10);
+	console.log("dnd!" + r);
+	return (Math.round(z*(1.2 - r)));
+}
+
 hasMP = function(c) {
 	return (c.mp >= c.magicCost);
 }
@@ -51,7 +57,7 @@ killCharacter = function(c) {
 // The player arg[0] attacked the player arg[1]
 handleAttack = function(cAttacking, cAttacked) {
 	currentHP = cAttacked.hp;
-	currentAttack = cAttacking.attackStrength; 
+	currentAttack = dnd(cAttacking.attackStrength); 
 	currentHP -= currentAttack;
 	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP); 
 	cAttacked.damageDisplayCounter = 20;
@@ -65,7 +71,7 @@ handleAttack = function(cAttacking, cAttacked) {
 
 handleMagic = function(cAttacking, cAttacked) {
     currentHP = cAttacked.hp;
-	currentMagic = cAttacking.magicStrength; 
+	currentMagic = dnd(cAttacking.magicStrength); 
 	cAttacking.mp -= cAttacking.magicCost;
 	currentHP -= currentMagic;
 	cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP);
