@@ -1,3 +1,11 @@
+/* 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ */
+ 
+ //just handles the welcome screen before moving the user down
+ //the pipeline to the actual game.
+
 Welcome = function () {
 	canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");

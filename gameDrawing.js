@@ -1,3 +1,11 @@
+/* 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ */
+ 
+ 
+ //does all the drawing.
+
 // SCRIPT 1 DRAWING CODE
 canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
@@ -102,6 +110,7 @@ alreadyOccupied = function(newX, newY) {
   return isOccupied;
 }
 
+//draw arrow on the action menu that has magic option.
 drawActionMagicMenuArrow = function(ctx) {
     var x = 20;
     var y = 0;

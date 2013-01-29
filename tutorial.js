@@ -1,3 +1,11 @@
+/* 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ */
+ 
+ //just handles the tutorial screen 
+ //hardcoded in order to ensure design
+
 Tutorial = function() {
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
