@@ -170,13 +170,14 @@ Archer = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-
-
-  if (this.damageDisplayCounter > 0) {
-	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
-	this.damageDisplayCounter -= 1;
-	} else this.damageDisplayAmount = 0;
   }
+  this.shouldDrawDamage = function(ctx) {
+    if (this.damageDisplayCounter > 0) {
+        drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+        this.damageDisplayCounter -= 1;
+    } else 
+      this.damageDisplayAmount = 0;
+    }
 
 }
 
@@ -349,11 +350,14 @@ Warrior = function(ctx, x, y,team) {
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   
-   if (this.damageDisplayCounter > 0) {
-	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
-	this.damageDisplayCounter -= 1;
-	} else this.damageDisplayAmount = 0;
   }
+  this.shouldDrawDamage = function(ctx) {
+    if (this.damageDisplayCounter > 0) {
+        drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+        this.damageDisplayCounter -= 1;
+    } else 
+      this.damageDisplayAmount = 0;
+    }
 
 }
 
@@ -528,12 +532,14 @@ Mage = function(ctx, x, y,team) {
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
 
-   if (this.damageDisplayCounter > 0) {
-	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
-	this.damageDisplayCounter -= 1;
-	} else this.damageDisplayAmount = 0;
   }
-
+  this.shouldDrawDamage = function(ctx) {
+    if (this.damageDisplayCounter > 0) {
+        drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+        this.damageDisplayCounter -= 1;
+    } else 
+      this.damageDisplayAmount = 0;
+    }
 }
 
 Ninja = function(ctx, x, y,team) {
@@ -703,11 +709,15 @@ Ninja = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-   if (this.damageDisplayCounter > 0) {
-	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
-	this.damageDisplayCounter -= 1;
-	} else this.damageDisplayAmount = 0;
+
 }
+this.shouldDrawDamage = function(ctx) {
+  if (this.damageDisplayCounter > 0) {
+      drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+      this.damageDisplayCounter -= 1;
+  } else 
+    this.damageDisplayAmount = 0;
+  }
 }
 
 Cleric = function(ctx, x, y,team) {
@@ -883,10 +893,12 @@ Cleric = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-
-   if (this.damageDisplayCounter > 0) {
-	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
-	this.damageDisplayCounter -= 1;
-	} else this.damageDisplayAmount = 0;
   }
+  this.shouldDrawDamage = function(ctx) {
+    if (this.damageDisplayCounter > 0) {
+        drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+        this.damageDisplayCounter -= 1;
+    } else 
+      this.damageDisplayAmount = 0;
+    }
   }

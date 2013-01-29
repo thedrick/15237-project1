@@ -289,6 +289,9 @@
       } else {
         cursor.draw(ctx);
       }
+      characterSet.forEach(function(c) {
+        c.shouldDrawDamage(ctx);
+      });
     }
     
     // draw at 30 FPS
