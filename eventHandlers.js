@@ -195,6 +195,25 @@ handleCharacterWaiting = function(e) {
   }
 }
 
+characterCanAttack = function(cx, cy) {
+  if (selectedCharacter === null) return false;
+  if (selectedCharacter.name === "Cleric") return true;
+  var canAttackSomeone = false;
+  characterSet.forEach(function(c) {
+    var cDist = Math.abs(cx - c.x) + Math.abs(cy - c.y);
+    if (c === selectedCharacter) {
+      cDist = 50;
+    }
+    if (cDist <= selectedCharacter.attackRange) {
+      canAttackSomeone = true;
+    }
+    if (selectedCharacter.isMagical && cDist <= selectedCharacter.magicRange) {
+      canAttackSomeone = true;
+    }
+  });
+  return canAttackSomeone;
+}
+
 // The characterIsMoving game state is active, so lets handle movement.
 handleCharacterMoving = function(e) {
   var curX = cursor.x;
@@ -237,6 +256,9 @@ handleCharacterMoving = function(e) {
         }
         console.log("finished the while loops");
         selectedCharacter.hasMoved = true;
+        if (!characterCanAttack(cursor.x, cursor.y)) {
+          selectedCharacter.hasAttacked = true;
+        }
         resetGameState();
         return;
       }

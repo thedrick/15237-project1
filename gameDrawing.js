@@ -13,9 +13,9 @@ grid = [['GG', 'GG', 'GG', 'RP', 'RP', 'GG', 'GG', 'PL', 'PB', 'PC', 'PC', 'PC',
         ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'BG', 'TG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'DG', 'GG', 'GG'],
         ['GG', 'TG', 'GG', 'TG', 'GG', 'GG', 'GG', 'BG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG', 'GG', 'GG', 'GG'],
         ['GG', 'GG', 'GG', 'GG', 'GG', 'TG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'DG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-        ['GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-        ['TG', 'BG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
-        ['TG', 'TG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
+        ['GG', 'GG', 'GG', 'GG', 'SF', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'DN', 'PR', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+        ['TG', 'BG', 'GG', 'GG', 'SF', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG', 'GG'],
+        ['TG', 'TG', 'GG', 'LF', 'GG', 'GG', 'GG', 'LF', 'GG', 'GG', 'GG', 'GG', 'GG', 'PL', 'DN', 'PR', 'GG', 'GG', 'GG', 'SF', 'GG', 'GG', 'GG', 'GG', 'GG']];
         
 // draw the tile at i,j from the gameboard grid.
 drawTile = function(ctx, i, j) {
@@ -209,7 +209,6 @@ drawAttackSquares = function(ctx, n, xLoc, yLoc) {
       attackingCharacter.isBeingAttacked = true;
     }
   });
-
 }
 
 containsmagic = function(x,y) {
