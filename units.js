@@ -27,7 +27,10 @@ Archer = function(ctx, x, y,team) {
   this.hasMoved = false;
   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
-  
+
+ this.damageDisplayAmount = 0;
+  this.damageDisplayCounter = 0;  
+ 
   // The character should move this much 
   this.shouldMoveLeft = 0;
   this.shouldMoveUp = 0;
@@ -157,8 +160,13 @@ Archer = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
-  
-  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+
+  if (this.damageDisplayCounter > 0) {
+	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+	this.damageDisplayCounter -= 1;
+	} else this.damageDisplayAmount = 0;
+  }
+ 
   
 }
 }
@@ -188,6 +196,9 @@ Warrior = function(ctx, x, y,team) {
   this.hasMoved = false;
   this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
+
+  this.damageDisplayAmount = 0;
+  this.damageDisplayCounter = 0;
   
   // The character should move this much 
   this.shouldMoveLeft = 0;
@@ -318,8 +329,12 @@ Warrior = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
+   if (this.damageDisplayCounter > 0) {
+	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+	this.damageDisplayCounter -= 1;
+	} else this.damageDisplayAmount = 0;
   }
-  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+
 }
 
 Mage = function(ctx, x, y,team) {
@@ -349,6 +364,10 @@ Mage = function(ctx, x, y,team) {
    this.hasAttacked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
 
+   this.damageDisplayCounter = 0;
+  this.damageDisplayAmount = 0;
+
+  
   // The character should move this much 
   this.shouldMoveLeft = 0;
   this.shouldMoveUp = 0;
@@ -478,8 +497,12 @@ Mage = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
+   if (this.damageDisplayCounter > 0) {
+	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+	this.damageDisplayCounter -= 1;
+	} else this.damageDisplayAmount = 0;
   }
-  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+ 
 }
 
 Ninja = function(ctx, x, y,team) {
@@ -640,7 +663,10 @@ Ninja = function(ctx, x, y,team) {
     this.shouldSwitchCounter = 5;
   }
   }
-  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+   if (this.damageDisplayCounter > 0) {
+	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+	this.damageDisplayCounter -= 1;
+	} else this.damageDisplayAmount = 0;
 }
 
 Cleric = function(ctx, x, y,team) {
@@ -671,6 +697,8 @@ Cleric = function(ctx, x, y,team) {
    this.hasAttacked = false;
    this.myTurn = ((team === currentPlayer) ? true : false);
  
+   this.damageDisplayCounter = 0;
+   this.damageDisplayAmount = 0;
   
   // The character should move this much 
   this.shouldMoveLeft = 0;
@@ -802,5 +830,9 @@ Cleric = function(ctx, x, y,team) {
     this.shouldSwitchCounter = 5;
   }
   }
-  this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+   if (this.damageDisplayCounter > 0) {
+	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
+	this.damageDisplayCounter -= 1;
+	} else this.damageDisplayAmount = 0;
+  }
 }
