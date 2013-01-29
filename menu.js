@@ -55,23 +55,43 @@ Welcome = function () {
 Help = function (){
 	var help = new Image();
 	var back = new Image();
+	var more = new Image();
+	var helphighlight = false;
 	help.src = "helpMenu1.png";
 	back.src = "backbutton.png";
+	more.src = "morebutton.png";
 	var drawHelpMenu = function(){
 		ctx.drawImage(help, 0, 0);  // draw image at (0, 0)
-		ctx.fillStyle = "#FFFFFF";
-		ctx.fillRect(790,490,130,60);
+		if (helphighlight === false){
+			ctx.fillStyle = "#FFFFFF";
+			ctx.fillRect(640, 490, 130, 60);
+		}
+		else{
+			ctx.fillStyle = "#FFFFFF";
+			ctx.fillRect(790,490,130,60);
+		}
+		ctx.drawImage(more, 650,495,110,50);
 		ctx.drawImage(back, 800,495,110,50);
 
 	}
 
 	var onKeyPressHelp = function(event){
-		if (event.keyCode ===13){
+		if (event.keyCode === 39){
+    		helphighlight = true;
+    	}
+    	else if(event.keyCode === 37){
+    		helphighlight = false;
+    	}
+		else if (event.keyCode ===13 && helphighlight === false){
+			alert("show tutorial");
+		}
+		else if(event.keyCode ==13 && helphighlight == true){
 			window.clearInterval(drawHelp);
 			canvas.removeEventListener('keydown', onKeyPressHelp,false);
 			Welcome();
 			return;
-	}
+		}
+
 }
 
 	canvas.addEventListener('keydown', onKeyPressHelp, false);
