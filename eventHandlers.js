@@ -76,7 +76,19 @@ handleAttack = function(cAttacking, cAttacked) {
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	} 
-	
+	var cx = cAttacked.x - cAttacking.x;
+	var cy = cAttacked.y - cAttacking.y;
+	if (cx === 0 || (Math.abs(cy) > Math.abs(cx))) {
+	  if (cy < 0) 
+	    cAttacking.direction = 0;
+	  else
+	    cAttacking.direction = 2;
+	} else {
+	  if (cx < 0)
+	    cAttacking.direction = 3;
+	  else
+	    cAttacking.direction = 1;
+	}
 }
 
 handleMagic = function(cAttacking, cAttacked) {
@@ -89,6 +101,19 @@ handleMagic = function(cAttacking, cAttacked) {
 	cAttacked.damageDisplayAmount = currentMagic;
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
+	}
+	var cx = cAttacked.x - cAttacking.x;
+	var cy = cAttacked.y - cAttacking.y;
+	if (cx === 0 || (Math.abs(cy) > Math.abs(cx))) {
+	  if (cy < 0) 
+	    cAttacking.direction = 0;
+	  else
+	    cAttacking.direction = 2;
+	} else {
+	  if (cx < 0)
+	    cAttacking.direction = 3;
+	  else
+	    cAttacking.direction = 1;
 	}
 }	
 
@@ -296,7 +321,7 @@ handleCharacterAttacking = function(e) {
       if (alreadyOccupied(curX, curY)) {
         var attackedPlayer = characterAtLocation(curX, curY);
         console.log(selectedCharacter.name + " attacked " + attackedPlayer.name);
-		handleAttack(selectedCharacter, attackedPlayer);
+		    handleAttack(selectedCharacter, attackedPlayer);
         selectedCharacter.hasAttacked = true;
         resetGameState();
         return;
