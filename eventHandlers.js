@@ -54,7 +54,9 @@ handleAttack = function(cAttacking, cAttacked) {
 	currentAttack = cAttacking.attackStrength; 
 	currentHP -= currentAttack;
 	//cAttacked.hp = ((currentHP > cAttacked.maxHp) ? cAttacked.maxHp : currentHP); //unnecessary
-	cAttacked.showDamage(currentAttack);
+	cAttacked.damageDisplayCounter = 20;
+	cAttacked.damageDisplayAmount = currentAttack;
+	//cAttacked.showDamage(currentAttack);
 	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	} 

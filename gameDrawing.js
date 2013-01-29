@@ -486,12 +486,12 @@ drawCharacterSide = function(ctx, x, y, team, b) {
   if (b) ctx.stroke();
 }
 
-drawDamageMagic = function(ctx, x, y, amt) {
+drawDamageMagic = function(ctx, x, y, amt, count) {
+	//if (count === 0) return;
 	console.log("in the function");
-	ctx.font = "24px Croissant One";
+	ctx.font = "18px Croissant One";
 	ctx.textAlign = "center"
 	ctx.fillStyle = "red";
-	for (var i=0; i<100; i++)
-    	ctx.fillText("-" + amt, 40, 40);
+	ctx.fillText("-" + amt, x*tileW + 4*tileW/10, y*tileH - (20 - count));
 	
 }
