@@ -38,7 +38,7 @@ switchTurn = function() {
 //also does gameOver check
 killCharacter = function(c) {
 	var index = -1;
-    var gameOver = true;
+  var gameOver = true;
 	var temp = characterSet[0].team;
 	
 	for (var i=0; i < characterSet.length; i++) {
@@ -54,18 +54,22 @@ killCharacter = function(c) {
 	if (characterSet.length === 1) gameOver = true;
 	
 	if (gameOver) {
-    var player1 = new Image();
-    var player2 = new Image();
-    player1.src = "player1.png";
-    player2.src = "player2.png";
-
+    clearInterval(mainInterval);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     if(currentPlayer === 1){
-      ctx.drawImage(player1, 0, 0);
+      ctx.drawImage(player1Wins, 0, 0);
     }
     else{
-      ctx.drawImage(player2, 0, 0);  
+      ctx.drawImage(player2Wins, 0, 0);  
     }
 		characterSet = [];
+		var restartHandler = function(e) {
+		  if (e.keyCode === 82) {// 'r'
+		    canvas.removeEventListener('keydown', restartHandler, false);
+		    App();
+	    }
+		}
+		canvas.addEventListener('keydown', restartHandler, false);
 	}
 }
 

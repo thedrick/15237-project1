@@ -17,7 +17,7 @@ Archer = function(ctx, x, y,team) {
   this.attackRange = 4;
   this.uid = uidGen(); //unique
   
-  this.attackStrength = 13 
+  this.attackStrength = 13; 
   this.isMagical = false; //to display different action menu
   this.hp = 50;
   this.maxHp = 50;

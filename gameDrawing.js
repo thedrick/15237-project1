@@ -13,6 +13,10 @@ canvas = document.getElementById("canvas");
   tileset.src = "./resources/16tiles.png";
   characters = new Image();
   characters.src = "./resources/characters.png";
+  player1Wins = new Image();
+  player2Wins = new Image();
+  player1Wins.src = "player1.png";
+  player2Wins.src = "player2.png";
   
   // tile constants
   tileH = 40;
