@@ -1,8 +1,12 @@
-// tutorial that appears right after the play start screen. This shows the players
-// how the gameplay works. This does not explain the mechanics as that is explained 
-// in the help screen.
+/* 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ */
+ 
+ //just handles the tutorial screen 
+ //hardcoded in order to ensure design
+
 Tutorial = function() {
-  // set up the canvas and load the images
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
   var tutorialbkgd = new Image();
@@ -17,7 +21,6 @@ Tutorial = function() {
   var movementSwitch = 15;
   var currentDisplayMovement = 0;
   
-  // drawing code for the different characters
   var drawWarrior = function(x, y) {
     ctx.drawImage(characters, charW * movePosition, charH * 2, charW, charH, tileW * x + charWoffset, tileH * y + charHoffset, charW, charH);
   }
@@ -38,13 +41,11 @@ Tutorial = function() {
     ctx.drawImage(characters, charW * (6 + movePosition), charH * (2 + 4), charW, charH, tileW * x + charWoffset, tileH * y + charHoffset, charW, charH);
   }
   
-  // po
   var P = function(x, y) {
     this.x = x;
     this.y = y;
   }
   
-  // draws movement squares (hardcoded)
   var drawTutorialMovement = function() {
     ctx.fillStyle = "rgba(15,150,255, 0.7)";
     var moveBlocksForTut = [new P(19, 1.5), new P(19, 0.5), new P(19, 3.5),
@@ -59,7 +60,6 @@ Tutorial = function() {
     });
   }
   
-  // draws attack squares (hardcoded)
   var drawTutorialAttack = function(x, y) {
     ctx.fillStyle = "rgba(20,173,0, 0.7)";
     var attackBlocksForTut = [new P(20, 2.5), new P(18, 2.5), new P(19, 1.5), new P(19, 3.5)];
@@ -68,7 +68,6 @@ Tutorial = function() {
     });
   }
   
-  // draws magic squares (hardcoded)
   var drawTutorialMagic = function(x, y) {
     ctx.fillStyle = "rgba(173,20,0, 0.7)";
     var magicBlocksForTut = [new P(20, 2.5), new P(18, 2.5), new P(19, 1.5), new P(19, 3.5),
@@ -79,7 +78,6 @@ Tutorial = function() {
     });
   }
   
-  // draws the tutorial screen and animates!!
   var drawTutorial = function() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.drawImage(tutorialbkgd, 0, 0);
@@ -111,7 +109,6 @@ Tutorial = function() {
       }
       shouldSwitchCounter = 5;
     }
-    // draws the characters in the correct boxes
     drawWarrior(2, 1.5);
     drawCharacterSide(ctx, 2, 1.5, 1, true);
     drawArcher(9, 0.5);
@@ -148,9 +145,9 @@ Tutorial = function() {
     }
   }
     
-  // interval to animate
+  
   var drawInt = setInterval(drawTutorial, 1000 / 30);
-  // continues to the game when you click enter
+  
   var tutorialKeyPress = function(event){
     if (event.keyCode === 13) {
       canvas.removeEventListener('keydown', tutorialKeyPress, false);

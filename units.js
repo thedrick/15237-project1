@@ -1,25 +1,32 @@
-// SCRIPT 2 - contains unit definitions for the game.
+/* 15-237 Project 1
+ * Samaan Ghani (sghani), Tyler Hedrick (thedrick), Peter J. Marino (pmarino)
+ * 29 January 2013 
+ */
+
+
+// units.js contains unit definitions for the game.
+// Since no classes/prototypes allowed, a lot of 
+// repetitive, ugly code. Sorry :( 
+
 // Character classes //
-
-//@TODO pmarino: decide reasonable damage values.
-//@TODO pmarino: turn-by-turn incremental restoration of MP
-
 Archer = function(ctx, x, y,team) {
-  this.x = x;
-  this.y = y;
-  this.team = team;
+  this.x = x; 
+  this.y = y; 
+  this.team = team; 
   this.movementRange = 4;
   this.attackRange = 4;
-  this.uid = uidGen();
+  this.uid = uidGen(); //unique
   
-  this.attackStrength = 13 //magic number 
-  this.isMagical = false;
+  this.attackStrength = 13 
+  this.isMagical = false; //to display different action menu
   this.hp = 50;
   this.maxHp = 50;
   this.mp = 0;
   this.maxMp = 0;
   this.name = "Archer";
-  this.direction = 2;
+  this.direction = 2; //for orientation
+  
+  //flags for displaying events
   this.isSelected = false;
   this.isMoving = false;
   this.isAttacking = false;
@@ -28,8 +35,10 @@ Archer = function(ctx, x, y,team) {
   this.hasAttacked = false;
   this.isBeingAttacked = false;
   this.isBeingMagicked = false;
-  this.myTurn = ((team === currentPlayer) ? true : false);
+  
+  this.myTurn = ((team === currentPlayer) ? true : false); 
 
+  //for damage animations
  this.damageDisplayAmount = 0;
   this.damageDisplayCounter = 0;  
  
@@ -40,10 +49,12 @@ Archer = function(ctx, x, y,team) {
   this.shouldMoveDown = 0;
   this.movePosition = 1;
   this.changeDirectionCounter = 10;
-  this.movementDirections = [];
+  this.movementDirections = []; //JS doesn't have tuples...
   this.shouldSwitch = false;
   this.shouldSwitchCounter = 5;
   
+  //draw functions for movement animations
+  //left, right, etc.
   this.moveLeft = function(ctx) {
     if (this.shouldMoveLeft === 0) return;
     this.direction = 3;
@@ -120,6 +131,8 @@ Archer = function(ctx, x, y,team) {
     }
   }
   
+  
+  //function that is called each time the canvas is repainted.
   this.draw = function(ctx) {
     // Make the character move and make sure we draw the tiles too.
     //ctx.clearRect(this.x * tileW, this.y *tileH, 40, 40);
@@ -183,6 +196,7 @@ Archer = function(ctx, x, y,team) {
 
 
 // Represents a Warrior unit in the game.
+
 Warrior = function(ctx, x, y,team) {
   this.x = x;
   this.y = y;
