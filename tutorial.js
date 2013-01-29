@@ -118,6 +118,7 @@ Tutorial = function() {
     drawMage(17, 9.5);
     drawCleric(22, 9.5);
     
+    drawMage(19, 2.5);
     if (movementSwitch !== 0) movementSwitch--;
     else {
       movementSwitch = 15;
