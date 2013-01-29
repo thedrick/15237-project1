@@ -48,7 +48,17 @@ killCharacter = function(c) {
 	if (characterSet.length === 1) gameOver = true;
 	
 	if (gameOver) {
-		//@TODO: DISPLAY A WIN SCREEN!!!
+    var player1 = new Image();
+    var player2 = new Image();
+    player1.src = "player1.png";
+    player2.src = "player2.png";
+
+    if(currentPlayer === 1){
+      ctx.drawImage(player1, 0, 0);
+    }
+    else{
+      ctx.drawImage(player2, 0, 0);  
+    }
 		characterSet = [];
 	}
 }
@@ -63,7 +73,7 @@ handleAttack = function(cAttacking, cAttacked) {
 	cAttacked.damageDisplayCounter = 20;
 	cAttacked.damageDisplayAmount = currentAttack;
 	//cAttacked.showDamage(currentAttack);
-	if (currentHP <= 0) {
+	if (currentHP <= 100) {
 		killCharacter(cAttacked);
 	} 
 	
