@@ -1,0 +1,20 @@
+> From: eakeller@andrew.cmu.edu
+> Date: January 24, 2013, 1:13:25 AM EST
+> To: "Tyler Hedrick" <thedrick@andrew.cmu.edu>
+> Cc: staff-15-237@lists.andrew.cmu.edu
+> Subject: Design Meeting Notes
+> 
+> Tyler,
+> 
+> Here are the notes that I have from our meeting today:
+> 
+> Having a tutorial round for a complex strategy game like this would be a
+> great idea to impliment. You also may want to chose a better color for the
+> green player that will stand out more from the background. You can play
+> around with the other colors if you need to to support this.
+> 
+> Please forward this to the rest of your teammates.
+> 
+> -Liz
+> 
+> 
