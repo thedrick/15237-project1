@@ -34,7 +34,7 @@ Welcome = function () {
     	else if(highlight === false && event.keyCode === 13){
     		window.clearInterval(drawMain);
     		canvas.removeEventListener('keydown',onKeyPress,false);
-    		App();
+    		Tutorial();
     		return;
     	}
     	else if(highlight === true && event.keyCode === 13){

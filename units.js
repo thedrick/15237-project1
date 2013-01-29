@@ -376,8 +376,8 @@ Mage = function(ctx, x, y,team) {
    
    this.hp = 45;
    this.maxHp = 45;
-   this.mp = 40;
-   this.maxMp = 40;
+   this.mp = 45;
+   this.maxMp = 45;
    this.name = "Mage";
    this.direction = 2;
    this.isSelected = false;
