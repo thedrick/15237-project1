@@ -883,11 +883,10 @@ Cleric = function(ctx, x, y,team) {
   if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
     drawCharacterSide(ctx, this.x, this.y, this.team,true);
   else drawCharacterSide(ctx, this.x, this.y, this.team, false);
-}
 
-  
    if (this.damageDisplayCounter > 0) {
 	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
 	this.damageDisplayCounter -= 1;
 	} else this.damageDisplayAmount = 0;
+  }
   }
