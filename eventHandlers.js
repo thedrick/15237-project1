@@ -73,7 +73,7 @@ handleAttack = function(cAttacking, cAttacked) {
 	cAttacked.damageDisplayCounter = 20;
 	cAttacked.damageDisplayAmount = currentAttack;
 	//cAttacked.showDamage(currentAttack);
-	if (currentHP <= 100) {
+	if (currentHP <= 0) {
 		killCharacter(cAttacked);
 	} 
 	
