@@ -98,6 +98,7 @@
   var App;
   var resetGameStates;
   var draw;
+  var resetCharacters;
   
   // Unique ID generator
   var uniqueID = function() {
@@ -154,6 +155,13 @@
     characters = new Image();
     characters.src = "./resources/characters.png";
     
+    resetCharacters = function() {
+      characterSet.forEach(function (c){
+  	    c.isBeingAttacked = false;
+  	    c.isBeingMagicked = false;
+  	  });
+    }
+    
     // resets game states back to default values.
     resetGameState = function() {
       if (selectedCharacter !== null) {
@@ -169,11 +177,13 @@
       neighbors = [];
       attack = [];
 	    magic = [];
+	    resetCharacters();
+	  
+	  
 	  
 	  var noMovesLeft = true;
 	  for (var i = 0; i < characterSet.length; i++) {
 		if (characterSet[i].myTurn && (!(characterSet[i].hasMoved && characterSet[i].hasAttacked))) {
-			  console.log(!(characterSet[i].hasAttacked && characterSet[i].hasMoved));
 			  noMovesLeft = false;
 			  break;
 		  }

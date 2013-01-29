@@ -26,6 +26,8 @@ Archer = function(ctx, x, y,team) {
   this.isMagicking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
+  this.isBeingAttacked = false;
+  this.isBeingMagicked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
   
   // The character should move this much 
@@ -133,10 +135,6 @@ Archer = function(ctx, x, y,team) {
   this.moveRight(ctx);
   this.moveDown(ctx);
   this.moveUp(ctx);
-  ctx.drawImage(characters, charW * (12 + this.movePosition), charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-    drawCharacterSide(ctx, this.x, this.y, this.team,true);
-  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
   else {
     switch(this.movePosition) {
@@ -159,7 +157,17 @@ Archer = function(ctx, x, y,team) {
   }
   
   this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
-  
+  if (this.isBeingAttacked) {
+    ctx.fillStyle = "rgba(20,173,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  } else if (this.isBeingMagicked) {
+    ctx.fillStyle = "rgba(173,20,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  }
+  ctx.drawImage(characters, charW * (12 + this.movePosition), charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+    drawCharacterSide(ctx, this.x, this.y, this.team,true);
+  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
 }
 }
 
@@ -187,6 +195,8 @@ Warrior = function(ctx, x, y,team) {
   this.isMagicking = false;
   this.hasMoved = false;
   this.hasAttacked = false;
+  this.isBeingAttacked = false;
+  this.isBeingMagicked = false;
   this.myTurn = ((team === currentPlayer) ? true : false);
   
   // The character should move this much 
@@ -228,8 +238,6 @@ Warrior = function(ctx, x, y,team) {
       this.x = Math.round(this.x);
     } else if (this.shouldMoveRight >= 5) {
       drawTile(ctx, Math.round(this.x) + 1, Math.round(this.y));
-    } else {
-      drawTile(ctx, Math.round(this.x) - 1, Math.round(this.y));
     }
   }
   this.moveDown = function(ctx) {
@@ -294,10 +302,6 @@ Warrior = function(ctx, x, y,team) {
   this.moveRight(ctx);
   this.moveDown(ctx);
   this.moveUp(ctx);
-  ctx.drawImage(characters, charW * this.movePosition, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-    drawCharacterSide(ctx, this.x, this.y, this.team,true);
-  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
   else {
     switch(this.movePosition) {
@@ -318,8 +322,21 @@ Warrior = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
-  }
   this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+  if (this.isBeingAttacked) {
+    ctx.fillStyle = "rgba(20,173,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  } else if (this.isBeingMagicked) {
+    ctx.fillStyle = "rgba(173,20,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  } else {
+    drawTile(ctx, this.x, this.y);
+  }
+  ctx.drawImage(characters, charW * this.movePosition, charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+    drawCharacterSide(ctx, this.x, this.y, this.team,true);
+  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
+}
 }
 
 Mage = function(ctx, x, y,team) {
@@ -347,7 +364,9 @@ Mage = function(ctx, x, y,team) {
    this.isMagicking = false;
    this.hasMoved = false;
    this.hasAttacked = false;
-  this.myTurn = ((team === currentPlayer) ? true : false);
+   this.isBeingAttacked = false;
+   this.isBeingMagicked = false;
+   this.myTurn = ((team === currentPlayer) ? true : false);
 
   // The character should move this much 
   this.shouldMoveLeft = 0;
@@ -454,10 +473,6 @@ Mage = function(ctx, x, y,team) {
   this.moveRight(ctx);
   this.moveDown(ctx);
   this.moveUp(ctx);
-  ctx.drawImage(characters, charW * (3 + this.movePosition), charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-    drawCharacterSide(ctx, this.x, this.y, this.team,true);
-  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
   else {
     switch(this.movePosition) {
@@ -478,8 +493,19 @@ Mage = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
-  }
   this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+  if (this.isBeingAttacked) {
+    ctx.fillStyle = "rgba(20,173,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  } else if (this.isBeingMagicked) {
+    ctx.fillStyle = "rgba(173,20,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  }
+  ctx.drawImage(characters, charW * (3 + this.movePosition), charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+    drawCharacterSide(ctx, this.x, this.y, this.team,true);
+  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
+}
 }
 
 Ninja = function(ctx, x, y,team) {
@@ -509,6 +535,8 @@ Ninja = function(ctx, x, y,team) {
    this.hasMoved = false;
    this.hasAttacked = false;
    this.myTurn = ((team === currentPlayer) ? true : false);
+   this.isBeingAttacked = false;
+   this.isBeingMagicked = false;
  
   // The character should move this much 
   this.shouldMoveLeft = 0;
@@ -615,10 +643,6 @@ Ninja = function(ctx, x, y,team) {
   this.moveRight(ctx);
   this.moveDown(ctx);
   this.moveUp(ctx);
-  ctx.drawImage(characters, charW * (9 + this.movePosition), charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-    drawCharacterSide(ctx, this.x, this.y, this.team,true);
-  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
   else {
     switch(this.movePosition) {
@@ -639,8 +663,19 @@ Ninja = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
-  }
   this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+  if (this.isBeingAttacked) {
+    ctx.fillStyle = "rgba(20,173,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  } else if (this.isBeingMagicked) {
+    ctx.fillStyle = "rgba(173,20,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  }
+  ctx.drawImage(characters, charW * (9 + this.movePosition), charH * this.direction, charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+    drawCharacterSide(ctx, this.x, this.y, this.team,true);
+  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
+}
 }
 
 Cleric = function(ctx, x, y,team) {
@@ -649,7 +684,7 @@ Cleric = function(ctx, x, y,team) {
    this.team = team;
    this.movementRange = 3;
    this.attackRange = 1;
-   this.magicRange = 1;
+   this.magicRange = 2;
    this.isMagical = true;
    this.uid = uidGen();
    
@@ -670,7 +705,8 @@ Cleric = function(ctx, x, y,team) {
    this.hasMoved = false;
    this.hasAttacked = false;
    this.myTurn = ((team === currentPlayer) ? true : false);
- 
+   this.isBeingAttacked = false;
+   this.isBeingMagicked = false;
   
   // The character should move this much 
   this.shouldMoveLeft = 0;
@@ -777,10 +813,6 @@ Cleric = function(ctx, x, y,team) {
   this.moveRight(ctx);
   this.moveDown(ctx);
   this.moveUp(ctx);
-  ctx.drawImage(characters, charW * (6 + this.movePosition), charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
-  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
-    drawCharacterSide(ctx, this.x, this.y, this.team,true);
-  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
   if (this.shouldSwitchCounter !== 0) this.shouldSwitchCounter--;
   else {
     switch(this.movePosition) {
@@ -801,6 +833,17 @@ Cleric = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
-  }
   this.showDamage = function(amt){drawDamageMagic(ctx,x,y,amt);}
+  if (this.isBeingAttacked) {
+    ctx.fillStyle = "rgba(20,173,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  } else if (this.isBeingMagicked) {
+    ctx.fillStyle = "rgba(173,20,0, 0.7)"
+    ctx.fillRect(tileW*this.x, tileH*this.y, 37,37);
+  }
+  ctx.drawImage(characters, charW * (6 + this.movePosition), charH * (this.direction + 4), charW, charH, tileW * this.x + charWoffset, tileH * this.y + charHoffset, charW, charH);
+  if ((!(this.hasMoved && this.hasAttacked)) && (this.myTurn))
+    drawCharacterSide(ctx, this.x, this.y, this.team,true);
+  else drawCharacterSide(ctx, this.x, this.y, this.team, false);
+}
 }

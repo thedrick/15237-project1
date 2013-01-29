@@ -75,7 +75,16 @@ drawTile = function(ctx, i, j) {
     ctx.drawImage(tileset, x*tileSize, y*tileSize, tileSize, tileSize, tileW*i, tileH*j, tileW, tileH);
 }
 
-
+// check if the tile at newX, newY is occupied by another character.
+alreadyOccupied = function(newX, newY) {
+  isOccupied = false;
+  characterSet.forEach(function(c) {
+    if (c.x === newX && c.y === newY) {
+      isOccupied = c;
+    }
+  });
+  return isOccupied;
+}
 
 drawActionMagicMenuArrow = function(ctx) {
     var x = 20;
@@ -194,6 +203,13 @@ drawAttackSquares = function(ctx, n, xLoc, yLoc) {
       drawAttackSquares(ctx, n-1, xLoc, yLoc + 1);
       drawAttackSquares(ctx, n-1, xLoc, yLoc - 1);
   }
+  attack.forEach(function(a) {
+    var attackingCharacter = alreadyOccupied(a[0], a[1]);
+    if (!!attackingCharacter && attackingCharacter !== selectedCharacter) {
+      attackingCharacter.isBeingAttacked = true;
+    }
+  });
+
 }
 
 containsmagic = function(x,y) {
@@ -224,6 +240,12 @@ drawMagicSquares = function(ctx, n, xLoc, yLoc) {
       drawMagicSquares(ctx, n-1, xLoc, yLoc + 1);
       drawMagicSquares(ctx, n-1, xLoc, yLoc - 1);
   }
+  magic.forEach(function(a) {
+    var attackingCharacter = alreadyOccupied(a[0], a[1]);
+    if (!!attackingCharacter && attackingCharacter !== selectedCharacter) {
+      attackingCharacter.isBeingMagicked = true;
+    }
+  });
 }
 
 // Draws the action menu and sets actionMenuShowing state to true. When this state is
@@ -311,7 +333,10 @@ drawActionMagicMenu = function(ctx, c) {
   var x = 150 / 2 + 10;
   ctx.fillText("Move", x, canvas.height - 180);
   ctx.fillText("Attack", x, canvas.height - 130);
-  ctx.fillText("Magic", x, canvas.height - 80);
+  if (c.name !== "Cleric") 
+    ctx.fillText("Magic", x, canvas.height - 80);
+  else 
+    ctx.fillText("Heal", x, canvas.height - 80);
   ctx.fillText("Wait", x, canvas.height - 30);
   drawActionMagicMenuArrow(ctx);
   actionMenuShowing = true;
@@ -341,6 +366,12 @@ drawStatusBox = function(ctx, c) {
   ctx.fillRect(canvas.width - 215, 45, 180 * (c.hp / c.maxHp), 10);
   ctx.fillStyle = "rgb(28, 95, 212)";
   ctx.fillRect(canvas.width - 215, 70, 180 * (c.mp / c.maxMp), 10);
+  ctx.fillStyle = "white";
+  ctx.fillText(c.hp + " / " + c.maxHp, canvas.width - 150, 55);
+  if (c.maxMp <= 1)
+       ctx.fillText("0 / 0", canvas.width - 142, 80);
+  else 
+    ctx.fillText(c.mp + " / " + c.maxMp, canvas.width - 150, 80);
 }
 
 drawDirectionArrowUp = function(ctx, x, y, shouldFill) {

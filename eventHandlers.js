@@ -119,6 +119,7 @@ madeActionSelection = function(c, b) {
 // The action menu is currently being displayed, so handle any 
 // subsequent events.
 handleActionMenu = function(e) {
+  resetCharacters();
   var actionMin = 0;
   var actionMax = ((actionMagicMenuShowing) ? 3 : 2);
   
@@ -140,17 +141,6 @@ handleActionMenu = function(e) {
       });
       break;
   }
-}
-
-// check if the tile at newX, newY is occupied by another character.
-alreadyOccupied = function(newX, newY) {
-  isOccupied = false;
-  characterSet.forEach(function(c) {
-    if (c.x === newX && c.y === newY) {
-      isOccupied = true;
-    }
-  });
-  return isOccupied;
 }
 
 // find the character at location (xLoc, yLoc)
