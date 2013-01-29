@@ -167,8 +167,6 @@ Archer = function(ctx, x, y,team) {
 	} else this.damageDisplayAmount = 0;
   }
  
-  
-}
 }
 
 
@@ -662,11 +660,11 @@ Ninja = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
-  }
    if (this.damageDisplayCounter > 0) {
 	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
 	this.damageDisplayCounter -= 1;
 	} else this.damageDisplayAmount = 0;
+}
 }
 
 Cleric = function(ctx, x, y,team) {
@@ -829,10 +827,10 @@ Cleric = function(ctx, x, y,team) {
     }
     this.shouldSwitchCounter = 5;
   }
-  }
+  
    if (this.damageDisplayCounter > 0) {
 	drawDamageMagic(ctx,this.x,this.y,this.damageDisplayAmount,this.damageDisplayCounter);
 	this.damageDisplayCounter -= 1;
 	} else this.damageDisplayAmount = 0;
   }
-}
+  }
